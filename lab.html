@@ -3,486 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratory Design Quiz</title>
+    <title>اختبار تصميم المختبرات - الوضع الليلي</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-            margin: 0;
-        }
-        .quiz-container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        :root { 
+            --primary: #3498db; 
+            --bg: #121212; 
+            --container-bg: #1e1e1e; 
+            --text-main: #e0e0e0; 
+            --text-sec: #b3b3b3;
+            --border-color: #333333;
+            --btn-bg: #2a2a2a;
+            --wrong: #e74c3c; 
+            --right: #2ecc71; 
+            --warning: #f39c12; 
         }
         
-        /* الشريط العلوي الذي يحتوي على العنوان وزر العودة */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .top-bar h1 {
-            margin: 0;
-            color: #2c3e50;
-            font-size: 1.6em;
-            direction: ltr;
-        }
-        .back-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1em;
-            transition: background 0.3s ease;
-        }
-        .back-btn:hover {
-            background-color: #c0392b;
-        }
-
-        /* شريط الإحصائيات */
-        .stats-board {
-            display: flex;
-            justify-content: space-between;
-            background: #2c3e50;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            font-weight: bold;
-            font-size: 0.95em;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .stat-item {
-            background: rgba(255,255,255,0.1);
-            padding: 8px 12px;
-            border-radius: 5px;
-            text-align: center;
-            flex: 1;
-            min-width: 100px;
-        }
-        .stat-item span {
-            display: block;
-            font-size: 1.2em;
-            margin-top: 5px;
-        }
-        .correct-stat { color: #2ecc71; }
-        .incorrect-stat { color: #e74c3c; }
-
-        /* منطقة السؤال */
-        .question-block {
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background-color: #fafafa;
-            direction: ltr; /* لترك الأسئلة بالانجليزية من اليسار لليمين */
-            text-align: left;
-        }
-        .question-title {
-            font-weight: bold;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        .options {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        .options li {
-            margin-bottom: 12px;
-        }
-        label {
-            display: block;
-            padding: 12px 15px;
-            background: #eef2f5;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s ease, border 0.3s ease;
-            border: 2px solid transparent;
-        }
-        label:hover {
-            background: #d6e4f0;
-        }
-        input[type="radio"] {
-            margin-right: 15px;
-            transform: scale(1.2);
-            cursor: pointer;
-        }
-        label.disabled-label {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .quiz-container { background: var(--container-bg); width: 100%; max-width: 700px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 30px; position: relative; overflow: hidden; border: 1px solid #2a2a2a; }
         
-        /* التغذية الراجعة (صح/خطأ) */
-        .feedback {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 6px;
-            font-weight: bold;
-            display: none;
-            text-align: right; 
-            direction: rtl;
-            font-size: 1.1em;
-        }
-        .feedback.correct {
-            display: block;
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .feedback.incorrect {
-            display: block;
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        /* أزرار التحكم */
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 25px;
-            direction: rtl;
-        }
-        button {
-            padding: 12px 30px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-        #skip-btn { background-color: #f39c12; color: white; }
-        #skip-btn:hover { background-color: #e67e22; }
+        .header { border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; text-align: center; }
+        .header h1 { font-size: 1.6rem; color: var(--primary); margin: 0; }
         
-        #next-btn { background-color: #3498db; color: white; display: none; }
-        #next-btn:hover { background-color: #2980b9; }
+        .setup-screen { text-align: center; padding: 20px 0; }
+        .setup-screen h2 { color: var(--text-main); margin-bottom: 25px; font-weight: normal; }
+        .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
+        .btn-setup { background: var(--container-bg); border: 2px solid var(--primary); color: var(--primary); padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
+        .btn-setup:hover { background: var(--primary); color: #fff; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); }
 
-        /* شاشة النتيجة النهائية */
-        #final-screen {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        #final-score {
-            font-size: 3em;
-            color: #2c3e50;
-            margin: 20px 0;
-            font-weight: bold;
-            direction: ltr;
-        }
-        .score-message {
-            font-size: 1.5em;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-        }
-        .final-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-            margin-top: 20px;
-        }
-        #restart-btn { background-color: #2ecc71; color: white; padding: 15px 40px; font-size: 1.2em; width: 100%; max-width: 300px;}
-        #restart-btn:hover { background-color: #27ae60; }
+        .stats-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; text-align: center; }
+        .stat-box { background: var(--btn-bg); padding: 10px 5px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border-color); }
+        .stat-cor { border-bottom: 3px solid var(--right); color: var(--right); }
+        .stat-wro { border-bottom: 3px solid var(--wrong); color: var(--wrong); }
+        .stat-rem { border-bottom: 3px solid var(--warning); color: var(--warning); }
+        .stat-ans { border-bottom: 3px solid #3498db; color: #3498db; }
+        .stat-box span { display: block; font-size: 1.4rem; margin-top: 5px; color: var(--text-main); }
+
+        .question-text { font-size: 1.2rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.6; font-weight: 600; text-align: left; direction: ltr; }
+        .options-container { display: grid; gap: 12px; }
+        .option-btn { background: var(--btn-bg); border: 2px solid var(--border-color); color: var(--text-main); padding: 15px; border-radius: 10px; cursor: pointer; text-align: left; font-size: 1rem; transition: all 0.2s; direction: ltr; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #1a252c; }
+        .option-btn.correct { background-color: rgba(46, 204, 113, 0.2); border-color: var(--right); color: var(--right); }
+        .option-btn.incorrect { background-color: rgba(231, 76, 60, 0.2); border-color: var(--wrong); color: var(--wrong); }
         
-        #home-btn { background-color: #34495e; color: white; padding: 15px 40px; font-size: 1.2em; width: 100%; max-width: 300px;}
-        #home-btn:hover { background-color: #2c3e50; }
+        .skip-container { margin-top: 20px; text-align: center; }
+        .btn-skip { background: transparent; border: 1px solid var(--warning); color: var(--warning); padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; width: 100%; }
+        .btn-skip:hover:not(:disabled) { background: rgba(243, 156, 18, 0.1); }
+        .btn-skip:disabled { border-color: #555; color: #555; cursor: not-allowed; }
 
-        @media (max-width: 600px) {
-            .stats-board { flex-direction: column; }
-            .top-bar { flex-direction: column; gap: 15px; text-align: center; }
+        .footer { margin-top: 30px; display: flex; justify-content: center; border-top: 2px solid var(--border-color); padding-top: 20px;}
+        .btn { padding: 10px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-home { background: #333; color: var(--text-main); text-decoration: none; font-size: 0.9rem; padding: 10px 20px; display: inline-block; border-radius: 8px; transition: 0.3s; border: 1px solid #444; }
+        .btn-home:hover { background: #444; color: #fff; }
+        
+        .result-screen { text-align: center; display: none; }
+        .score { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 20px 0; text-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
+        #score-text { color: var(--text-sec); font-size: 1.1rem; }
+        
+        #game { display: none; }
+
+        @media (max-width: 500px) {
+            .stats-board { grid-template-columns: repeat(2, 1fr); gap: 15px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="quiz-container">
-        
-        <div class="top-bar">
-            <button class="back-btn" onclick="window.location.href='index.html'">🏠 العودة للرئيسية</button>
-            <h1>Laboratory Design</h1>
-        </div>
-        
-        <div class="stats-board" id="stats-board">
-            <div class="stat-item">المتبقي <span id="stat-remaining">50</span></div>
-            <div class="stat-item">المُجاب <span id="stat-answered">0</span></div>
-            <div class="stat-item correct-stat">الإجابات الصحيحة <span id="stat-correct">0</span></div>
-            <div class="stat-item incorrect-stat">الإجابات الخاطئة <span id="stat-incorrect">0</span></div>
-        </div>
+<div class="quiz-container" id="quiz-box">
+    <div class="header">
+        <h1>Laboratory Design Quiz</h1>
+    </div>
 
-        <div id="question-container">
-            </div>
-
-        <div class="controls" id="controls">
-            <button id="skip-btn" onclick="skipQuestion()">تخطي (للسؤال التالي)</button>
-            <button id="next-btn" onclick="goToNextQuestion()">متابعة</button>
-        </div>
-
-        <div id="final-screen">
-            <h2>🎉 اكتمل الاختبار! 🎉</h2>
-            <div class="score-message">نتيجتك النهائية هي:</div>
-            <div id="final-score">0 / 100</div>
-            
-            <div class="final-buttons">
-                <button id="restart-btn" onclick="location.reload()">إعادة الاختبار من جديد</button>
-                <button id="home-btn" onclick="window.location.href='index.html'">العودة للقائمة الرئيسية</button>
-            </div>
+    <div class="setup-screen" id="setup-screen">
+        <h2>اختر عدد الأسئلة لبدء الاختبار:</h2>
+        <div class="setup-btns">
+            <button class="btn-setup" onclick="startQuiz(15)">اختبار قصير (15 سؤال)</button>
+            <button class="btn-setup" onclick="startQuiz(30)">اختبار متوسط (30 سؤال)</button>
+            <button class="btn-setup" onclick="startQuiz(50)">اختبار شامل (50 سؤال)</button>
         </div>
     </div>
 
-    <script>
-        const rawQuestions = [
-            "1. What is the main goal of good laboratory design? A) Decoration B) Safety and efficiency C) Entertainment D) Marketing",
-            "2. Laboratory design should consider the needs of: A) Visitors only B) Scientific and operational work C) Cleaning staff only D) Security staff only",
-            "3. Laboratories can be designed for: A) Research only B) Diagnostics only C) Education only D) Research, diagnostics, education, or manufacturing",
-            "4. Which factor must be considered when designing a laboratory? A) Color of walls only B) Future technological changes C) Music system D) Advertising",
-            "5. Safety in laboratory design aims to protect: A) Equipment only B) Users and environment C) Buildings only D) Furniture only",
-            "6. Hazardous materials must be considered in: A) Laboratory decoration B) Safety protocols C) Furniture selection D) Wall painting",
-            "7. Efficient workflow in laboratories helps to: A) Increase unnecessary movement B) Reduce efficiency C) Improve work performance D) Slow down work",
-            "8. Laboratory layout should minimize: A) Work B) Movement and contamination C) Equipment use D) Lighting",
-            "9. Flexibility in lab design means: A) Fixed furniture only B) Modular and adaptable design C) No equipment changes D) Limited space",
-            "10. Energy‑efficient laboratory design aims to: A) Increase power consumption B) Reduce environmental impact C) Waste energy D) Increase temperature",
-            "11. Laboratories are often divided into functional: A) Rooms B) Zones C) Buildings D) Floors",
-            "12. Preparation areas in laboratories are used for: A) Entertainment B) Experiment preparation C) Sleeping D) Storage only",
-            "13. Smooth movement flow helps reduce: A) Research quality B) Cross‑contamination C) Lighting efficiency D) Equipment cost",
-            "14. Ventilation in laboratories is important for: A) Decoration B) Air quality and safety C) Noise reduction only D) Color design",
-            "15. Airflow in labs helps to remove: A) Furniture B) Contaminants C) Researchers D) Equipment",
-            "16. Workbenches should be: A) Fragile B) Decorative C) Durable and chemical‑resistant D) Wooden only",
-            "17. Workstations are designed for: A) Entertainment B) Laboratory tasks C) Sleeping D) Meetings only",
-            "18. Hazardous materials should be stored in: A) Open shelves B) Locked cabinets C) Desks D) Drawers only",
-            "19. Temperature‑sensitive materials require: A) Hot storage B) Cold storage C) Open storage D) Dry storage only",
-            "20. Proper lighting in laboratories helps to: A) Increase errors B) Reduce focus C) Reduce errors and improve concentration D) Increase noise",
-            "21. Fume hoods are used when handling: A) Water B) Chemicals C) Paper D) Books",
-            "22. Biosafety cabinets are used for: A) Food storage B) Handling biological materials C) Furniture storage D) Equipment repair",
-            "23. Waste management systems are used for: A) Decoration B) Disposal of laboratory waste C) Storing chemicals D) Air purification",
-            "24. Laboratory waste may include: A) Chemical waste B) Biological waste C) Radioactive waste D) All of the above",
-            "25. Fire safety equipment includes: A) Fire extinguishers B) Computers C) Chairs D) Lamps",
-            "26. Emergency exits in laboratories should be: A) Hidden B) Clearly accessible C) Locked D) Decorative",
-            "27. Emergency stations may include: A) Eyewash stations B) Showers C) First aid areas D) All of the above",
-            "28. Biosafety levels define: A) Laboratory colors B) Containment levels for biological materials C) Lighting systems D) Furniture design",
-            "29. BSL stands for: A) Biological Safety Layout B) Biosafety Level C) Basic Safety Lab D) Biological System Lab",
-            "30. User comfort in laboratories is important because: A) Labs are relaxing places B) Labs are high‑stress environments C) Work is easy D) No equipment is used",
-            "31. Adjustable workstations help: A) Improve user comfort B) Reduce safety C) Increase contamination D) Increase noise",
-            "32. Consumable furniture refers to: A) Temporary furniture used in labs B) Food furniture C) Electronic furniture D) Decorative furniture",
-            "33. Sustainable laboratory design focuses on: A) Environmental protection B) Decoration C) High cost D) Increased waste",
-            "34. Water conservation in labs can be achieved by: A) High‑flow fixtures B) Low‑flow fixtures C) No water use D) Open pipes",
-            "35. Energy‑efficient equipment helps: A) Increase pollution B) Reduce energy consumption C) Waste electricity D) Increase heat",
-            "36. Laboratory design must consider: A) Safety B) Efficiency C) Environmental impact D) All of the above",
-            "37. Laboratory layout planning should focus on: A) Worker movement B) Equipment placement C) Safety D) All of the above",
-            "38. Poor laboratory design may lead to: A) Increased safety B) Accidents and inefficiency C) Faster experiments D) Better results",
-            "39. Ventilation systems help maintain: A) Air pressure only B) Air quality C) Room color D) Furniture position",
-            "40. Workbench materials should resist: A) Water only B) Chemicals C) Air only D) Light",
-            "41. Administrative spaces in labs are used for: A) Experiments B) Office tasks C) Chemical storage D) Waste disposal",
-            "42. Specialized equipment areas are designed for: A) Large instruments B) Chairs C) Paper storage D) Lighting only",
-            "43. Good laboratory design improves: A) Productivity B) Safety C) Organization D) All of the above",
-            "44. Laboratory airflow design mainly prevents: A) Heat loss B) Contamination spread C) Lighting problems D) Noise",
-            "45. Safety protocols should be: A) Ignored B) Integrated into lab design C) Used only during emergencies D) Used only by managers",
-            "46. Laboratories are commonly used in: A) Hospitals B) Universities C) Industries D) All of the above",
-            "47. Adaptable laboratory design helps with: A) Future research changes B) Furniture decoration C) Music systems D) Lighting color",
-            "48. Chemical waste disposal should be: A) Random B) Controlled and managed C) Ignored D) Mixed with normal waste",
-            "49. Biosafety cabinets help protect: A) Researchers B) Samples C) Environment D) All of the above",
-            "50. A well‑designed laboratory primarily supports: A) Safe and effective scientific work B) Entertainment C) Tourism D) Advertising"
-        ];
+    <div class="stats-board" id="stats-board">
+        <div class="stat-box stat-ans">مُجاب <span id="val-ans">0</span></div>
+        <div class="stat-box stat-rem">متبقي <span id="val-rem">0</span></div>
+        <div class="stat-box stat-cor">صح <span id="val-cor">0</span></div>
+        <div class="stat-box stat-wro">خطأ <span id="val-wro">0</span></div>
+    </div>
 
-        const rawAnswers = ["B", "B", "D", "B", "B", "B", "C", "B", "B", "B", "B", "B", "B", "B", "B", "C", "B", "B", "B", "C", "B", "B", "B", "D", "A", "B", "D", "B", "B", "B", "A", "A", "A", "B", "B", "D", "D", "B", "B", "B", "B", "A", "D", "B", "B", "D", "A", "B", "D", "A"];
+    <div id="game">
+        <div class="question-text" id="question">جاري تحميل السؤال...</div>
+        <div class="options-container" id="options">
+            </div>
+        <div class="skip-container" id="skip-container">
+            <button class="btn-skip" id="btn-skip" onclick="skipQuestion()">تخطي السؤال (تأجيل)</button>
+        </div>
+    </div>
 
-        let quizData = [];
-        rawQuestions.forEach((qStr, index) => {
-            let parts = qStr.split(" A) ");
-            
-            // هنا الكود يقوم بمسح الرقم الأصلي (مثال: "1. ") لكي نضع رقماً جديداً لاحقاً
-            let questionText = parts[0].replace(/^\d+\.\s*/, ''); 
-            
-            let optionsStr = parts[1];
+    <div class="result-screen" id="result-screen">
+        <h2>اكتمل الاختبار!</h2>
+        <div class="score" id="final-score">0%</div>
+        <p id="score-text"></p>
+        <button class="btn" style="background: var(--primary); color:#121212; margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem; padding: 12px 30px;" onclick="location.reload()">إعادة الاختبار</button>
+    </div>
 
-            let bIndex = optionsStr.indexOf(" B) ");
-            let cIndex = optionsStr.indexOf(" C) ");
-            let dIndex = optionsStr.indexOf(" D) ");
+    <div class="footer">
+        <a href="index.html" class="btn-home">العودة للرئيسية</a>
+    </div>
+</div>
 
-            quizData.push({
-                id: index,
-                question: questionText,
-                options: {
-                    "A": optionsStr.substring(0, bIndex).trim(),
-                    "B": optionsStr.substring(bIndex + 4, cIndex).trim(),
-                    "C": optionsStr.substring(cIndex + 4, dIndex).trim(),
-                    "D": optionsStr.substring(dIndex + 4).trim()
-                },
-                correctAnswer: rawAnswers[index],
-                isAnswered: false
-            });
-        });
+<script>
+// بنك الأسئلة (50 سؤال)
+const allQuestions = [
+    { q: "What is the main goal of good laboratory design?", a: ["Decoration", "Safety and efficiency", "Entertainment", "Marketing"], c: 1 },
+    { q: "Laboratory design should consider the needs of:", a: ["Visitors only", "Scientific and operational work", "Cleaning staff only", "Security staff only"], c: 1 },
+    { q: "Laboratories can be designed for:", a: ["Research only", "Diagnostics only", "Education only", "Research, diagnostics, education, or manufacturing"], c: 3 },
+    { q: "Which factor must be considered when designing a laboratory?", a: ["Color of walls only", "Future technological changes", "Music system", "Advertising"], c: 1 },
+    { q: "Safety in laboratory design aims to protect:", a: ["Equipment only", "Users and environment", "Buildings only", "Furniture only"], c: 1 },
+    { q: "Hazardous materials must be considered in:", a: ["Laboratory decoration", "Safety protocols", "Furniture selection", "Wall painting"], c: 1 },
+    { q: "Efficient workflow in laboratories helps to:", a: ["Increase unnecessary movement", "Reduce efficiency", "Improve work performance", "Slow down work"], c: 2 },
+    { q: "Laboratory layout should minimize:", a: ["Work", "Movement and contamination", "Equipment use", "Lighting"], c: 1 },
+    { q: "Flexibility in lab design means:", a: ["Fixed furniture only", "Modular and adaptable design", "No equipment changes", "Limited space"], c: 1 },
+    { q: "Energy-efficient laboratory design aims to:", a: ["Increase power consumption", "Reduce environmental impact", "Waste energy", "Increase temperature"], c: 1 },
+    { q: "Laboratories are often divided into functional:", a: ["Rooms", "Zones", "Buildings", "Floors"], c: 1 },
+    { q: "Preparation areas in laboratories are used for:", a: ["Entertainment", "Experiment preparation", "Sleeping", "Storage only"], c: 1 },
+    { q: "Smooth movement flow helps reduce:", a: ["Research quality", "Cross-contamination", "Lighting efficiency", "Equipment cost"], c: 1 },
+    { q: "Ventilation in laboratories is important for:", a: ["Decoration", "Air quality and safety", "Noise reduction only", "Color design"], c: 1 },
+    { q: "Airflow in labs helps to remove:", a: ["Furniture", "Contaminants", "Researchers", "Equipment"], c: 1 },
+    { q: "Workbenches should be:", a: ["Fragile", "Decorative", "Durable and chemical-resistant", "Wooden only"], c: 2 },
+    { q: "Workstations are designed for:", a: ["Entertainment", "Laboratory tasks", "Sleeping", "Meetings only"], c: 1 },
+    { q: "Hazardous materials should be stored in:", a: ["Open shelves", "Locked cabinets", "Desks", "Drawers only"], c: 1 },
+    { q: "Temperature-sensitive materials require:", a: ["Hot storage", "Cold storage", "Open storage", "Dry storage only"], c: 1 },
+    { q: "Proper lighting in laboratories helps to:", a: ["Increase errors", "Reduce focus", "Reduce errors and improve concentration", "Increase noise"], c: 2 },
+    { q: "Fume hoods are used when handling:", a: ["Water", "Chemicals", "Paper", "Books"], c: 1 },
+    { q: "Biosafety cabinets are used for:", a: ["Food storage", "Handling biological materials", "Furniture storage", "Equipment repair"], c: 1 },
+    { q: "Waste management systems are used for:", a: ["Decoration", "Disposal of laboratory waste", "Storing chemicals", "Air purification"], c: 1 },
+    { q: "Laboratory waste may include:", a: ["Chemical waste", "Biological waste", "Radioactive waste", "All of the above"], c: 3 },
+    { q: "Fire safety equipment includes:", a: ["Fire extinguishers", "Computers", "Chairs", "Lamps"], c: 0 },
+    { q: "Emergency exits in laboratories should be:", a: ["Hidden", "Clearly accessible", "Locked", "Decorative"], c: 1 },
+    { q: "Emergency stations may include:", a: ["Eyewash stations", "Showers", "First aid areas", "All of the above"], c: 3 },
+    { q: "Biosafety levels define:", a: ["Laboratory colors", "Containment levels for biological materials", "Lighting systems", "Furniture design"], c: 1 },
+    { q: "BSL stands for:", a: ["Biological Safety Layout", "Biosafety Level", "Basic Safety Lab", "Biological System Lab"], c: 1 },
+    { q: "User comfort in laboratories is important because:", a: ["Labs are relaxing places", "Labs are high-stress environments", "Work is easy", "No equipment is used"], c: 1 },
+    { q: "Adjustable workstations help:", a: ["Improve user comfort", "Reduce safety", "Increase contamination", "Increase noise"], c: 0 },
+    { q: "Consumable furniture refers to:", a: ["Temporary furniture used in labs", "Food furniture", "Electronic furniture", "Decorative furniture"], c: 0 },
+    { q: "Sustainable laboratory design focuses on:", a: ["Environmental protection", "Decoration", "High cost", "Increased waste"], c: 0 },
+    { q: "Water conservation in labs can be achieved by:", a: ["High-flow fixtures", "Low-flow fixtures", "No water use", "Open pipes"], c: 1 },
+    { q: "Energy-efficient equipment helps:", a: ["Increase pollution", "Reduce energy consumption", "Waste electricity", "Increase heat"], c: 1 },
+    { q: "Laboratory design must consider:", a: ["Safety", "Efficiency", "Environmental impact", "All of the above"], c: 3 },
+    { q: "Laboratory layout planning should focus on:", a: ["Worker movement", "Equipment placement", "Safety", "All of the above"], c: 3 },
+    { q: "Poor laboratory design may lead to:", a: ["Increased safety", "Accidents and inefficiency", "Faster experiments", "Better results"], c: 1 },
+    { q: "Ventilation systems help maintain:", a: ["Air pressure only", "Air quality", "Room color", "Furniture position"], c: 1 },
+    { q: "Workbench materials should resist:", a: ["Water only", "Chemicals", "Air only", "Light"], c: 1 },
+    { q: "Administrative spaces in labs are used for:", a: ["Experiments", "Office tasks", "Chemical storage", "Waste disposal"], c: 1 },
+    { q: "Specialized equipment areas are designed for:", a: ["Large instruments", "Chairs", "Paper storage", "Lighting only"], c: 0 },
+    { q: "Good laboratory design improves:", a: ["Productivity", "Safety", "Organization", "All of the above"], c: 3 },
+    { q: "Laboratory airflow design mainly prevents:", a: ["Heat loss", "Contamination spread", "Lighting problems", "Noise"], c: 1 },
+    { q: "Safety protocols should be:", a: ["Ignored", "Integrated into lab design", "Used only during emergencies", "Used only by managers"], c: 1 },
+    { q: "Laboratories are commonly used in:", a: ["Hospitals", "Universities", "Industries", "All of the above"], c: 3 },
+    { q: "Adaptable laboratory design helps with:", a: ["Future research changes", "Furniture decoration", "Music systems", "Lighting color"], c: 0 },
+    { q: "Chemical waste disposal should be:", a: ["Random", "Controlled and managed", "Ignored", "Mixed with normal waste"], c: 1 },
+    { q: "Biosafety cabinets help protect:", a: ["Researchers", "Samples", "Environment", "All of the above"], c: 3 },
+    { q: "A well-designed laboratory primarily supports:", a: ["Safe and effective scientific work", "Entertainment", "Tourism", "Advertising"], c: 0 }
+];
 
-        // خلط الأسئلة عشوائياً
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-        shuffleArray(quizData);
+let questionQueue = []; 
+let currentQuestion = null;
+let totalQuestionsCount = 0;
+let score = 0;
+let wrongCount = 0;
+let answeredCount = 0;
 
-        let currentIndex = 0;
-        let stats = {
-            total: quizData.length,
-            answered: 0,
-            correct: 0,
-            incorrect: 0
-        };
+function startQuiz(count) {
+    document.getElementById("setup-screen").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    document.getElementById("stats-board").style.display = "grid";
 
-        function updateStatsUI() {
-            document.getElementById('stat-remaining').innerText = stats.total - stats.answered;
-            document.getElementById('stat-answered').innerText = stats.answered;
-            document.getElementById('stat-correct').innerText = stats.correct;
-            document.getElementById('stat-incorrect').innerText = stats.incorrect;
-        }
+    let shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+    let maxQuestions = Math.min(count, allQuestions.length);
+    
+    questionQueue = shuffled.slice(0, maxQuestions);
+    totalQuestionsCount = maxQuestions;
+    
+    score = 0;
+    wrongCount = 0;
+    answeredCount = 0;
+    
+    nextQuestion();
+}
 
-        function renderQuestion(index) {
-            const container = document.getElementById('question-container');
-            container.innerHTML = ''; 
+function updateStats() {
+    let remaining = questionQueue.length + (currentQuestion ? 1 : 0);
+    
+    document.getElementById("val-ans").innerText = answeredCount;
+    document.getElementById("val-rem").innerText = remaining;
+    document.getElementById("val-cor").innerText = score;
+    document.getElementById("val-wro").innerText = wrongCount;
 
-            const q = quizData[index];
+    document.getElementById("btn-skip").disabled = (questionQueue.length === 0);
+}
 
-            let qDiv = document.createElement('div');
-            qDiv.className = 'question-block';
+function nextQuestion() {
+    if (questionQueue.length === 0) {
+        showResults();
+        return;
+    }
 
-            let qTitle = document.createElement('div');
-            qTitle.className = 'question-title';
-            // إضافة الرقم الديناميكي (حسب الترتيب الحالي بعد الخلط)
-            qTitle.innerText = (index + 1) + ". " + q.question;
-            qDiv.appendChild(qTitle);
+    currentQuestion = questionQueue.shift();
+    updateStats();
 
-            let ul = document.createElement('ul');
-            ul.className = 'options';
+    document.getElementById("question").innerText = currentQuestion.q;
+    const optionsBox = document.getElementById("options");
+    optionsBox.innerHTML = "";
+    
+    currentQuestion.a.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = option;
+        btn.classList.add("option-btn");
+        btn.onclick = () => checkAnswer(index, btn);
+        optionsBox.appendChild(btn);
+    });
+    
+    document.getElementById("skip-container").style.display = "block";
+}
 
-            let feedbackDiv = document.createElement('div');
-            feedbackDiv.className = 'feedback';
-            feedbackDiv.id = 'current-feedback';
+function checkAnswer(selected, btn) {
+    document.getElementById("skip-container").style.display = "none"; 
+    const allBtns = document.querySelectorAll(".option-btn");
+    allBtns.forEach(b => b.disabled = true);
+    
+    if (selected === currentQuestion.c) {
+        btn.classList.add("correct");
+        score++;
+    } else {
+        btn.classList.add("incorrect");
+        allBtns[currentQuestion.c].classList.add("correct");
+        wrongCount++;
+    }
+    
+    answeredCount++;
+    currentQuestion = null; 
+    updateStats();
 
-            for (const [key, value] of Object.entries(q.options)) {
-                let li = document.createElement('li');
-                let label = document.createElement('label');
-                
-                let radio = document.createElement('input');
-                radio.type = 'radio';
-                radio.name = 'current_question';
-                radio.value = key;
+    setTimeout(() => {
+        nextQuestion();
+    }, 1500);
+}
 
-                radio.onchange = function() {
-                    handleAnswer(q, this.value, feedbackDiv);
-                };
+function skipQuestion() {
+    questionQueue.push(currentQuestion);
+    currentQuestion = null;
+    nextQuestion();
+}
 
-                label.appendChild(radio);
-                label.appendChild(document.createTextNode(key + ") " + value));
-                li.appendChild(label);
-                ul.appendChild(li);
-            }
+function showResults() {
+    document.getElementById("game").style.display = "none";
+    document.getElementById("stats-board").style.display = "none";
+    document.getElementById("result-screen").style.display = "block";
+    
+    const percent = Math.round((score / totalQuestionsCount) * 100);
+    document.getElementById("final-score").innerText = percent + "%";
+    document.getElementById("score-text").innerText = `أحسنت! لقد أجبت بشكل صحيح على ${score} من أصل ${totalQuestionsCount} سؤال.`;
+}
+</script>
 
-            qDiv.appendChild(ul);
-            qDiv.appendChild(feedbackDiv);
-            container.appendChild(qDiv);
-
-            document.getElementById('skip-btn').style.display = 'inline-block';
-            document.getElementById('next-btn').style.display = 'none';
-        }
-
-        function handleAnswer(questionObj, selectedValue, feedbackElement) {
-            questionObj.isAnswered = true;
-            stats.answered++;
-
-            if (selectedValue === questionObj.correctAnswer) {
-                stats.correct++;
-                feedbackElement.innerText = "✅ إجابة صحيحة!";
-                feedbackElement.className = 'feedback correct';
-            } else {
-                stats.incorrect++;
-                feedbackElement.innerText = "❌ إجابة خاطئة. الإجابة الصحيحة هي: " + questionObj.correctAnswer;
-                feedbackElement.className = 'feedback incorrect';
-            }
-
-            updateStatsUI();
-
-            let allRadios = document.getElementsByName('current_question');
-            for (let i = 0; i < allRadios.length; i++) {
-                allRadios[i].disabled = true;
-                allRadios[i].parentElement.classList.add('disabled-label');
-            }
-
-            document.getElementById('skip-btn').style.display = 'none';
-            document.getElementById('next-btn').style.display = 'inline-block';
-        }
-
-        function getNextUnansweredIndex(startIndex) {
-            let nextIdx = (startIndex + 1) % quizData.length;
-            let loopCount = 0;
-            
-            while (quizData[nextIdx].isAnswered && loopCount < quizData.length) {
-                nextIdx = (nextIdx + 1) % quizData.length;
-                loopCount++;
-            }
-
-            if (loopCount === quizData.length) {
-                return -1; 
-            }
-            return nextIdx;
-        }
-
-        function skipQuestion() {
-            let nextIdx = getNextUnansweredIndex(currentIndex);
-            if (nextIdx !== -1) {
-                currentIndex = nextIdx;
-                renderQuestion(currentIndex);
-            }
-        }
-
-        function goToNextQuestion() {
-            let nextIdx = getNextUnansweredIndex(currentIndex);
-            
-            if (nextIdx === -1) {
-                showFinalScreen();
-            } else {
-                currentIndex = nextIdx;
-                renderQuestion(currentIndex);
-            }
-        }
-
-        function showFinalScreen() {
-            document.querySelector('.top-bar').style.display = 'none'; // إخفاء الشريط العلوي في النهاية
-            document.getElementById('question-container').style.display = 'none';
-            document.getElementById('controls').style.display = 'none';
-            document.getElementById('stats-board').style.display = 'none';
-            
-            let finalScreen = document.getElementById('final-screen');
-            let scoreVal = stats.correct * 2; 
-            
-            document.getElementById('final-score').innerText = `${scoreVal} / 100`;
-            document.getElementById('final-score').style.color = scoreVal >= 50 ? '#2ecc71' : '#e74c3c';
-            
-            finalScreen.style.display = 'block';
-        }
-
-        // بدء الاختبار
-        updateStatsUI();
-        renderQuestion(currentIndex);
-
-    </script>
 </body>
 </html>
