@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الاختبارات للأجهزة المختبرية</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; margin: 0; padding: 0; color: #333; }
+        header { background-color: #2c3e50; color: white; padding: 40px 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        header h1 { margin: 0; font-size: 2.5em; }
+        header p { margin-top: 10px; font-size: 1.2em; color: #bdc3c7; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .quiz-card { background: white; border-radius: 12px; padding: 30px 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease; text-align: center; display: flex; flex-direction: column; justify-content: space-between; border-top: 5px solid; }
+        .quiz-card:hover { transform: translateY(-5px); }
+        .quiz-card h2 { color: #2c3e50; margin-top: 0; font-size: 1.6em; direction: ltr; }
+        .quiz-card p { color: #7f8c8d; margin-bottom: 25px; line-height: 1.6; }
+        .btn-active { display: inline-block; background-color: #3498db; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; transition: background 0.3s; }
+        .btn-active:hover { background-color: #2980b9; }
+        .btn-disabled { display: inline-block; background-color: #95a5a6; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: not-allowed; opacity: 0.8;}
+        .card-lab { border-top-color: #3498db; }
+        .card-centrifuge { border-top-color: #e67e22; }
+        .card-microscope { border-top-color: #9b59b6; }
+        .card-distiller { border-top-color: #1abc9c; }
+        .card-oven { border-top-color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>منصة الاختبارات للأجهزة المختبرية</h1>
+        <p>اختر الاختبار المتاح من القائمة أدناه لتبدأ التقييم</p>
+    </header>
+    <div class="container">
+        
+        <div class="quiz-card card-lab">
+            <h2>Laboratory design</h2>
+            <p>اختبار شامل مكون من 50 سؤال خيارات متعددة لاختبار معلوماتك في تصميم المختبرات والسلامة المهنية.</p>
+            <a href="lab.html" class="btn-active">ابدأ الاختبار الآن</a>
+        </div>
+
+        <div class="quiz-card card-centrifuge">
+            <h2>Centrifuge</h2>
+            <p>اختبار قادم يغطي مبدأ عمل جهاز الطرد المركزي، أنواعه، وقواعد الاستخدام الآمن في المختبر.</p>
+            <a href="#" class="btn-disabled" onclick="return false;">قريباً</a>
+        </div>
+        
+        <div class="quiz-card card-microscope">
+            <h2>Microscope</h2>
+            <p>قريباً.. أسئلة متخصصة في أجزاء المجهر الضوئي، طرق العناية به، وتكبير العينات.</p>
+            <a href="#" class="btn-disabled" onclick="return false;">قريباً</a>
+        </div>
+
+        <div class="quiz-card card-distiller">
+            <h2>Water distiller</h2>
+            <p>اختبار شامل 
+                 لتقييم معلوماتك حول جهاز التقطير، جودة المياه المختبرية، والصيانة.</p>
+            <a href="water.html" class="btn-active">ابدأ الاختبار الآن</a>
+        </div>
+
+        <div class="quiz-card card-oven">
+            <h2>Oven</h2>
+            <p>قريباً.. اختبار مخصص لأساسيات استخدام الفرن الحراري في التعقيم والتجفيف المختبري.</p>
+            <a href="#" class="btn-disabled" onclick="return false;">قريباً</a>
+        </div>
+
+    </div>
+</body>
+</html>

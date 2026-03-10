@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Distiller Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            margin: 0;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        
+        /* الشريط العلوي الذي يحتوي على العنوان وزر العودة */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .top-bar h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.6em;
+            direction: ltr;
+        }
+        .back-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: background 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* شريط الإحصائيات */
+        .stats-board {
+            display: flex;
+            justify-content: space-between;
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 0.95em;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+        }
+        .stat-item span {
+            display: block;
+            font-size: 1.2em;
+            margin-top: 5px;
+        }
+        .correct-stat { color: #2ecc71; }
+        .incorrect-stat { color: #e74c3c; }
+
+        /* منطقة السؤال */
+        .question-block {
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+            direction: ltr; /* لترك الأسئلة بالانجليزية من اليسار لليمين */
+            text-align: left;
+        }
+        .question-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .options li {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            padding: 12px 15px;
+            background: #eef2f5;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease, border 0.3s ease;
+            border: 2px solid transparent;
+        }
+        label:hover {
+            background: #d6e4f0;
+        }
+        input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        label.disabled-label {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        /* التغذية الراجعة (صح/خطأ) */
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+            text-align: right; 
+            direction: rtl;
+            font-size: 1.1em;
+        }
+        .feedback.correct {
+            display: block;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.incorrect {
+            display: block;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* أزرار التحكم */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            direction: rtl;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        #skip-btn { background-color: #f39c12; color: white; }
+        #skip-btn:hover { background-color: #e67e22; }
+        
+        #next-btn { background-color: #3498db; color: white; display: none; }
+        #next-btn:hover { background-color: #2980b9; }
+
+        /* شاشة النتيجة النهائية */
+        #final-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        #final-score {
+            font-size: 3em;
+            color: #2c3e50;
+            margin: 20px 0;
+            font-weight: bold;
+            direction: ltr;
+        }
+        .score-message {
+            font-size: 1.5em;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .final-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-top: 20px;
+        }
+        #restart-btn { background-color: #2ecc71; color: white; padding: 15px 40px; font-size: 1.2em; width: 100%; max-width: 300px;}
+        #restart-btn:hover { background-color: #27ae60; }
+        
+        #home-btn { background-color: #34495e; color: white; padding: 15px 40px; font-size: 1.2em; width: 100%; max-width: 300px;}
+        #home-btn:hover { background-color: #2c3e50; }
+
+        @media (max-width: 600px) {
+            .stats-board { flex-direction: column; }
+            .top-bar { flex-direction: column; gap: 15px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        
+        <div class="top-bar">
+            <button class="back-btn" onclick="window.location.href='index.html'">🏠 العودة للرئيسية</button>
+            <h1>Water Distiller</h1>
+        </div>
+        
+        <div class="stats-board" id="stats-board">
+            <div class="stat-item">المتبقي <span id="stat-remaining">50</span></div>
+            <div class="stat-item">المُجاب <span id="stat-answered">0</span></div>
+            <div class="stat-item correct-stat">الإجابات الصحيحة <span id="stat-correct">0</span></div>
+            <div class="stat-item incorrect-stat">الإجابات الخاطئة <span id="stat-incorrect">0</span></div>
+        </div>
+
+        <div id="question-container">
+            </div>
+
+        <div class="controls" id="controls">
+            <button id="skip-btn" onclick="skipQuestion()">تخطي (للسؤال التالي)</button>
+            <button id="next-btn" onclick="goToNextQuestion()">متابعة</button>
+        </div>
+
+        <div id="final-screen">
+            <h2>🎉 اكتمل الاختبار! 🎉</h2>
+            <div class="score-message">نتيجتك النهائية هي:</div>
+            <div id="final-score">0 / 100</div>
+            
+            <div class="final-buttons">
+                <button id="restart-btn" onclick="location.reload()">إعادة الاختبار من جديد</button>
+                <button id="home-btn" onclick="window.location.href='index.html'">العودة للقائمة الرئيسية</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // مصفوفة الأسئلة المأخوذة من الـ PDF لجهاز التقطير
+        const rawQuestions = [
+            "1. Distillation is a process of: A) Filtration B) Separation by heating and condensation C) Freezing D) Grinding",
+            "2. Successful distillation mainly depends on: A) Color B) Density C) Difference in boiling points D) Volume",
+            "3. The more volatile liquid is the one that: A) Has a higher boiling point B) Has a lower boiling point C) Has higher density D) Has lighter color",
+            "4. Distillation is mainly used for: A) Purifying liquids B) Measuring pressure C) Dissolving salts D) Sterilizing tools",
+            "5. The boiling point of a pure liquid is: A) Variable B) Constant C) Always low D) Unknown",
+            "6. The device that cools vapor is called: A) Flask B) Column C) Condenser D) Valve",
+            "7. In simple distillation, the boiling point difference should be: A) Very small B) Less than 10°C C) Greater than 70°C D) Zero",
+            "8. The fractionating column is used in: A) Simple distillation B) Fractional distillation C) Filtration D) Evaporation only",
+            "9. The function of immersion resistors is: A) Cooling B) Heating C) Measuring D) Filtering",
+            "10. Distilled water should be stored in: A) Metal containers B) Open glass containers C) Special plastic containers D) Wooden containers",
+            "11. Vapor changes into liquid during: A) Evaporation B) Condensation C) Melting D) Freezing",
+            "12. Better separation of close boiling liquids is achieved by: A) Simple distillation B) Fractional distillation C) Filtration D) Evaporation",
+            "13. Glass beads in the column increase: A) Color B) Pressure C) Separation efficiency D) Volume",
+            "14. Simple distillation is characterized by being: A) Complex B) Energy consuming C) Faster D) Always more accurate",
+            "15. One disadvantage of fractional distillation is: A) Poor separation B) Faster process C) Higher energy consumption D) No column required",
+            "16. Water in the boiling tank turns into vapor when: A) Temperature decreases B) It reaches its boiling point C) Pressure is zero D) It freezes",
+            "17. The function of the control valve is to: A) Cool B) Regulate water flow C) Measure temperature D) Filter",
+            "18. Distillation depends on differences in: A) Color B) Taste C) Vapor pressure D) Shape",
+            "19. Fractional distillation includes a: A) Condenser only B) Fractionating column C) Filter only D) Resistor only",
+            "20. The activated carbon filter removes: A) Heat B) Impurities and odors C) Pressure D) Vapor",
+            "21. The part that holds water before heating is the: A) Condenser B) Boiling tank C) Column D) Filter",
+            "22. The less volatile liquid: A) Boils first B) Boils at higher temperature C) Evaporates faster D) Does not evaporate",
+            "23. Increasing the number of theoretical plates will: A) Decrease separation B) Improve separation C) Stop distillation D) Reduce time",
+            "24. Distillation is used in laboratories for: A) Grinding B) Separation and purification C) Weight measurement D) Melting",
+            "25. The main difference between the two types is the presence of: A) Flask B) Condenser C) Fractionating column D) Valve",
+            "26. Simple distillation is suitable for: A) Complex mixtures B) Small boiling point difference C) Large boiling point difference D) Solid materials",
+            "27. Cooling water flows inside the: A) Column B) Condenser C) Tank D) Filter",
+            "28. Higher energy consumption in fractional distillation is due to: A) Cooling B) Repeated evaporation C) Filtration D) Lower temperature",
+            "29. Boiling point depends on: A) Pressure B) Color C) Shape D) Length",
+            "30. The goal of distillation is to: A) Change color B) Separate components C) Increase mass D) Reduce volume",
+            "31. Distillation separates liquids based on: A) Density B) Boiling point C) Color D) Mass",
+            "32. A pure liquid boils at a: A) Variable temperature B) Constant temperature C) Very low temperature D) Very high temperature",
+            "33. Fractional distillation is best for: A) Pure liquids only B) Complex mixtures C) Solid materials D) Gases",
+            "34. Simple distillation has less: A) Time B) Heat C) Separation efficiency D) All of the above",
+            "35. When vapor cools, it undergoes: A) Evaporation B) Condensation C) Melting D) Combustion",
+            "36. The distilled water container must be: A) Contaminated B) Open C) Special and insulated D) Metal",
+            "37. The more complex apparatus is: A) Simple distillation B) Fractional distillation C) Both D) None",
+            "38. The type of distillation used depends on: A) Color B) Boiling point difference C) Taste D) Shape",
+            "39. When boiling point difference is large, we use: A) Fractional B) Simple C) None D) Filtration",
+            "40. Repeated condensation and evaporation occur in the: A) Condenser B) Column C) Tank D) Filter",
+            "41. Distillation separates liquids according to: A) Density B) Boiling point C) Color D) Mass",
+            "42. Vapor pressure increases when: A) Temperature decreases B) Temperature increases C) Temperature is constant D) Freezing occurs",
+            "43. The condenser cools vapor using: A) Hot air B) Cold water C) Oil D) Steam",
+            "44. Simple distillation is not suitable for: A) Large boiling difference B) Pure liquids C) Small boiling difference D) Solid impurities",
+            "45. Fractional distillation requires: A) Less time B) Less energy C) More energy D) No energy",
+            "46. The column improves separation because it provides: A) Cooling B) Additional condensation surfaces C) Direct heating D) Filtration",
+            "47. Distilled water is used in: A) Medical laboratory analysis B) Drinking only C) Cooking D) Fuel",
+            "48. The first liquid collected is the one with: A) Higher boiling point B) Lower boiling point C) Solid state D) Higher density",
+            "49. Distillation may fail due to: A) No boiling point difference B) Color change C) Volume decrease D) Weight increase",
+            "50. The main principle of distillation is: A) Heating then condensation B) Freezing C) Grinding D) Mixing"
+        ];
+
+        // مصفوفة الإجابات الصحيحة بناءً على الجدول الموجود في ملفك
+        const rawAnswers = ["B", "C", "B", "A", "B", "C", "C", "B", "B", "C", "B", "B", "C", "C", "C", "B", "B", "C", "B", "B", "B", "B", "B", "B", "C", "C", "B", "B", "A", "B", "B", "B", "B", "D", "B", "C", "B", "B", "B", "B", "B", "B", "B", "C", "C", "B", "A", "B", "A", "A"];
+
+        let quizData = [];
+        rawQuestions.forEach((qStr, index) => {
+            let parts = qStr.split(" A) ");
+            
+            // مسح الرقم الأصلي لكي نضع رقماً جديداً بناءً على الترتيب العشوائي
+            let questionText = parts[0].replace(/^\d+\.\s*/, ''); 
+            
+            let optionsStr = parts[1];
+
+            let bIndex = optionsStr.indexOf(" B) ");
+            let cIndex = optionsStr.indexOf(" C) ");
+            let dIndex = optionsStr.indexOf(" D) ");
+
+            quizData.push({
+                id: index,
+                question: questionText,
+                options: {
+                    "A": optionsStr.substring(0, bIndex).trim(),
+                    "B": optionsStr.substring(bIndex + 4, cIndex).trim(),
+                    "C": optionsStr.substring(cIndex + 4, dIndex).trim(),
+                    "D": optionsStr.substring(dIndex + 4).trim()
+                },
+                correctAnswer: rawAnswers[index],
+                isAnswered: false
+            });
+        });
+
+        // خلط الأسئلة عشوائياً
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        shuffleArray(quizData);
+
+        let currentIndex = 0;
+        let stats = {
+            total: quizData.length,
+            answered: 0,
+            correct: 0,
+            incorrect: 0
+        };
+
+        function updateStatsUI() {
+            document.getElementById('stat-remaining').innerText = stats.total - stats.answered;
+            document.getElementById('stat-answered').innerText = stats.answered;
+            document.getElementById('stat-correct').innerText = stats.correct;
+            document.getElementById('stat-incorrect').innerText = stats.incorrect;
+        }
+
+        function renderQuestion(index) {
+            const container = document.getElementById('question-container');
+            container.innerHTML = ''; 
+
+            const q = quizData[index];
+
+            let qDiv = document.createElement('div');
+            qDiv.className = 'question-block';
+
+            let qTitle = document.createElement('div');
+            qTitle.className = 'question-title';
+            // إضافة الرقم الديناميكي
+            qTitle.innerText = (index + 1) + ". " + q.question;
+            qDiv.appendChild(qTitle);
+
+            let ul = document.createElement('ul');
+            ul.className = 'options';
+
+            let feedbackDiv = document.createElement('div');
+            feedbackDiv.className = 'feedback';
+            feedbackDiv.id = 'current-feedback';
+
+            for (const [key, value] of Object.entries(q.options)) {
+                let li = document.createElement('li');
+                let label = document.createElement('label');
+                
+                let radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'current_question';
+                radio.value = key;
+
+                radio.onchange = function() {
+                    handleAnswer(q, this.value, feedbackDiv);
+                };
+
+                label.appendChild(radio);
+                label.appendChild(document.createTextNode(key + ") " + value));
+                li.appendChild(label);
+                ul.appendChild(li);
+            }
+
+            qDiv.appendChild(ul);
+            qDiv.appendChild(feedbackDiv);
+            container.appendChild(qDiv);
+
+            document.getElementById('skip-btn').style.display = 'inline-block';
+            document.getElementById('next-btn').style.display = 'none';
+        }
+
+        function handleAnswer(questionObj, selectedValue, feedbackElement) {
+            questionObj.isAnswered = true;
+            stats.answered++;
+
+            if (selectedValue === questionObj.correctAnswer) {
+                stats.correct++;
+                feedbackElement.innerText = "✅ إجابة صحيحة!";
+                feedbackElement.className = 'feedback correct';
+            } else {
+                stats.incorrect++;
+                feedbackElement.innerText = "❌ إجابة خاطئة. الإجابة الصحيحة هي: " + questionObj.correctAnswer;
+                feedbackElement.className = 'feedback incorrect';
+            }
+
+            updateStatsUI();
+
+            let allRadios = document.getElementsByName('current_question');
+            for (let i = 0; i < allRadios.length; i++) {
+                allRadios[i].disabled = true;
+                allRadios[i].parentElement.classList.add('disabled-label');
+            }
+
+            document.getElementById('skip-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'inline-block';
+        }
+
+        function getNextUnansweredIndex(startIndex) {
+            let nextIdx = (startIndex + 1) % quizData.length;
+            let loopCount = 0;
+            
+            while (quizData[nextIdx].isAnswered && loopCount < quizData.length) {
+                nextIdx = (nextIdx + 1) % quizData.length;
+                loopCount++;
+            }
+
+            if (loopCount === quizData.length) {
+                return -1; 
+            }
+            return nextIdx;
+        }
+
+        function skipQuestion() {
+            let nextIdx = getNextUnansweredIndex(currentIndex);
+            if (nextIdx !== -1) {
+                currentIndex = nextIdx;
+                renderQuestion(currentIndex);
+            }
+        }
+
+        function goToNextQuestion() {
+            let nextIdx = getNextUnansweredIndex(currentIndex);
+            
+            if (nextIdx === -1) {
+                showFinalScreen();
+            } else {
+                currentIndex = nextIdx;
+                renderQuestion(currentIndex);
+            }
+        }
+
+        function showFinalScreen() {
+            document.querySelector('.top-bar').style.display = 'none';
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('stats-board').style.display = 'none';
+            
+            let finalScreen = document.getElementById('final-screen');
+            let scoreVal = stats.correct * 2; 
+            
+            document.getElementById('final-score').innerText = `${scoreVal} / 100`;
+            document.getElementById('final-score').style.color = scoreVal >= 50 ? '#2ecc71' : '#e74c3c';
+            
+            finalScreen.style.display = 'block';
+        }
+
+        // بدء الاختبار
+        updateStatsUI();
+        renderQuestion(currentIndex);
+
+    </script>
+</body>
+</html>
