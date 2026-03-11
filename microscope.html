@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار المجهر - Microscope Quiz</title>
+    <style>
+        :root { 
+            --primary: #9b59b6; /* لون بنفسجي مميز لاختبار المجهر */
+            --bg: #121212; 
+            --container-bg: #1e1e1e; 
+            --text-main: #e0e0e0; 
+            --text-sec: #b3b3b3;
+            --border-color: #333333;
+            --btn-bg: #2a2a2a;
+            --wrong: #e74c3c; 
+            --right: #2ecc71; 
+            --warning: #f39c12; 
+        }
+        
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .quiz-container { background: var(--container-bg); width: 100%; max-width: 700px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 30px; position: relative; overflow: hidden; border: 1px solid #2a2a2a; }
+        
+        .header { border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; text-align: center; }
+        .header h1 { font-size: 1.6rem; color: var(--primary); margin: 0; }
+        
+        .setup-screen { text-align: center; padding: 20px 0; }
+        .setup-screen h2 { color: var(--text-main); margin-bottom: 10px; font-weight: normal; }
+        .setup-screen p { color: var(--text-sec); margin-bottom: 25px; font-size: 1rem; }
+        
+        .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
+        
+        .custom-input {
+            background: var(--btn-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+        .custom-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(155, 89, 182, 0.2); }
+
+        .btn-setup { background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
+        .btn-setup:hover { background: #8e44ad; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4); }
+
+        .stats-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; text-align: center; }
+        .stat-box { background: var(--btn-bg); padding: 10px 5px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border-color); }
+        .stat-cor { border-bottom: 3px solid var(--right); color: var(--right); }
+        .stat-wro { border-bottom: 3px solid var(--wrong); color: var(--wrong); }
+        .stat-rem { border-bottom: 3px solid var(--warning); color: var(--warning); }
+        .stat-ans { border-bottom: 3px solid var(--primary); color: var(--primary); }
+        .stat-box span { display: block; font-size: 1.4rem; margin-top: 5px; color: var(--text-main); }
+
+        .question-text { font-size: 1.2rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.6; font-weight: 600; text-align: left; direction: ltr; }
+        .options-container { display: grid; gap: 12px; }
+        .option-btn { background: var(--btn-bg); border: 2px solid var(--border-color); color: var(--text-main); padding: 15px; border-radius: 10px; cursor: pointer; text-align: left; font-size: 1rem; transition: all 0.2s; direction: ltr; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #2c1e33; }
+        .option-btn.correct { background-color: rgba(46, 204, 113, 0.2); border-color: var(--right); color: var(--right); }
+        .option-btn.incorrect { background-color: rgba(231, 76, 60, 0.2); border-color: var(--wrong); color: var(--wrong); }
+        
+        .skip-container { margin-top: 20px; text-align: center; }
+        .btn-skip { background: transparent; border: 1px solid var(--warning); color: var(--warning); padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; width: 100%; }
+        .btn-skip:hover:not(:disabled) { background: rgba(243, 156, 18, 0.1); }
+        .btn-skip:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+
+        .footer { margin-top: 30px; display: flex; justify-content: center; border-top: 2px solid var(--border-color); padding-top: 20px;}
+        .btn { padding: 10px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-home { background: #333; color: var(--text-main); text-decoration: none; font-size: 0.9rem; padding: 10px 20px; display: inline-block; border-radius: 8px; transition: 0.3s; border: 1px solid #444; }
+        .btn-home:hover { background: #444; color: #fff; }
+        
+        .result-screen { text-align: center; display: none; }
+        .score { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 20px 0; text-shadow: 0 0 10px rgba(155, 89, 182, 0.3); }
+        #score-text { color: var(--text-sec); font-size: 1.1rem; }
+        
+        #game { display: none; }
+
+        @media (max-width: 500px) {
+            .stats-board { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-box">
+    <div class="header">
+        <h1>Microscope Quiz</h1>
+    </div>
+
+    <div class="setup-screen" id="setup-screen">
+        <h2>كم عدد الأسئلة التي تريد الإجابة عليها؟</h2>
+        <p>الأسئلة المتاحة في بنك الأسئلة: <span id="max-q-count" style="color: var(--primary); font-weight: bold;">0</span> سؤال</p>
+        
+        <div class="setup-btns">
+            <input type="number" id="custom-count" class="custom-input" min="1" placeholder="مثال: 50" value="25">
+            <button class="btn-setup" onclick="startCustomQuiz()">🚀 ابدأ الاختبار</button>
+            <p id="error-msg" style="color: var(--wrong); display: none; margin-top: 5px; font-weight: bold; font-size: 0.9rem;"></p>
+        </div>
+    </div>
+
+    <div class="stats-board" id="stats-board">
+        <div class="stat-box stat-ans">مُجاب <span id="val-ans">0</span></div>
+        <div class="stat-box stat-rem">متبقي <span id="val-rem">0</span></div>
+        <div class="stat-box stat-cor">صح <span id="val-cor">0</span></div>
+        <div class="stat-box stat-wro">خطأ <span id="val-wro">0</span></div>
+    </div>
+
+    <div id="game">
+        <div class="question-text" id="question">جاري تحميل السؤال...</div>
+        <div class="options-container" id="options"></div>
+        <div class="skip-container" id="skip-container">
+            <button class="btn-skip" id="btn-skip" onclick="skipQuestion()">تخطي السؤال (تأجيل)</button>
+        </div>
+    </div>
+
+    <div class="result-screen" id="result-screen">
+        <h2>اكتمل الاختبار!</h2>
+        <div class="score" id="final-score">0%</div>
+        <p id="score-text"></p>
+        <button class="btn" style="background: var(--primary); color:#fff; margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem; padding: 12px 30px;" onclick="location.reload()">إعادة الاختبار</button>
+    </div>
+
+    <div class="footer">
+        <a href="index.html" class="btn-home">العودة للرئيسية</a>
+    </div>
+</div>
+
+<script>
+// بنك أسئلة المجهر (100 سؤال)
+const allQuestions = [
+    {q: "What is a microscope mainly used for?", a: ["Measuring temperature", "Producing highly magnified images of small specimens", "Mixing chemicals", "Heating samples"], c: 1},
+    {q: "A microscope is described in the text as a:", a: ["Simple mechanical tool", "Precision instrument", "Chemical device", "Manual counter"], c: 1},
+    {q: "Which of the following is an optical subsystem of a microscope?", a: ["Stage", "Lens", "Base", "Arm"], c: 1},
+    {q: "The mechanical subsystem of a microscope controls the sample position in:", a: ["One dimension only", "Two dimensions only", "Three-dimensional space X, Y, Z", "Circular motion only"], c: 2},
+    {q: "Which subsystem includes transformers and light source?", a: ["Mechanical subsystem", "Electrical subsystem", "Optical subsystem", "Biological subsystem"], c: 1},
+    {q: "Which subsystem may include cameras and video?", a: ["Mechanical subsystem", "Electronic subsystem", "Optical subsystem", "Base subsystem"], c: 1},
+    {q: "A microscope is especially useful when objects are too small to be seen by the:", a: ["Camera", "Objective lens", "Naked eye", "Stage"], c: 2},
+    {q: "The word “microscope” comes partly from the Greek word “micros,” which means:", a: ["Bright", "Small", "Lens", "Eye"], c: 1},
+    {q: "Microscopy is defined as:", a: ["Repairing a microscope", "Investigation by a microscope", "Manufacturing lenses", "Measuring light intensity"], c: 1},
+    {q: "The eyepiece is located at the:", a: ["Base of the microscope", "Lower end of the stage", "Upper end of the microscope", "Side of the condenser"], c: 2},
+    {q: "The eyepiece consists of:", a: ["A single mirror", "A series of lenses mounted in a tube", "A metal plate", "A bulb filament"], c: 1},
+    {q: "The basic function of the eyepiece is to magnify the image formed by the:", a: ["Stage clips", "Objective lens", "Base", "Diaphragm"], c: 1},
+    {q: "The eyepiece magnifies the image a:", a: ["Third time", "First time", "Second time", "Fifth time"], c: 2},
+    {q: "The arm of the microscope is also called the:", a: ["Barrel", "Stand or limb", "Clip", "Tube plate"], c: 1},
+    {q: "The arm contains the:", a: ["Focus mechanism", "Light bulb only", "Stage clips only", "Filter disk only"], c: 0},
+    {q: "The arm supports the:", a: ["Stage and body/head", "Condenser only", "Diaphragm only", "Objective lens only"], c: 0},
+    {q: "The arm provides the microscope with:", a: ["Heat", "Color", "Rigidity", "Motion only"], c: 2},
+    {q: "Which type of arm has the arm and body as integral parts connected solidly to the base?", a: ["Pillar", "Boom", "Fixed", "Trinocular"], c: 2},
+    {q: "Which type of arm consists of a single post rising vertically from the base?", a: ["Fixed", "Boom", "Pillar", "Monocular"], c: 2},
+    {q: "In the pillar type arm, the microscope body can:", a: ["Only move left and right", "Rotate about the post and move up and down", "Only rotate downward", "Only remain fixed"], c: 1},
+    {q: "The boom arm is described as:", a: ["The most common arm", "A long boom type stand", "A short fixed stand", "A lens system"], c: 1},
+    {q: "The boom stand allows the microscope to be aligned in:", a: ["One fixed direction", "A wide variety of configurations", "Only vertical positions", "Only horizontal positions"], c: 1},
+    {q: "The least common type of arm is the:", a: ["Fixed arm", "Pillar arm", "Boom arm", "None of the above"], c: 2},
+    {q: "The stage is the platform:", a: ["Above the eyepiece", "Beneath the objectives", "Inside the base", "Behind the arm"], c: 1},
+    {q: "The stage is used to hold the:", a: ["Light source", "Slide or object", "Arm", "Power supply"], c: 1},
+    {q: "The surface of the stage is described as:", a: ["Rough and curved", "Smooth and flat", "Soft and flexible", "Transparent and thin"], c: 1},
+    {q: "The coarse adjustment is used to make:", a: ["Small changes in light", "Large changes in focus", "Small changes in color", "Large changes in stage size"], c: 1},
+    {q: "The fine adjustment is used to make:", a: ["Small adjustments of focus", "Large adjustments of focus", "Changes in magnification", "Changes in illumination color"], c: 0},
+    {q: "The base is the:", a: ["Upper support part", "Bottom support part", "Lens holder", "Image projector"], c: 1},
+    {q: "The base provides:", a: ["Balance and rigidity", "Color and brightness", "Magnification and contrast", "Rotation and illumination"], c: 0},
+    {q: "According to the text, the tube:", a: ["Holds the stage clips", "Reflects the light up to the viewer’s eyes", "Supports the base", "Contains the diaphragm"], c: 1},
+    {q: "The rotating object is also called the:", a: ["Barrel", "Nosepiece", "Limb", "Aperture"], c: 1},
+    {q: "The nosepiece is used to hold:", a: ["Stage clips", "Multiple objective lenses", "Only one eyepiece", "The diaphragm openings"], c: 1},
+    {q: "The purpose of the nosepiece is to allow:", a: ["Quick change of objective", "Quick removal of the base", "Quick focusing of the eyepiece", "Quick movement of the arm"], c: 0},
+    {q: "Objective lenses are the lenses closest to the:", a: ["Viewer’s eye", "Base", "Specimen", "Light switch"], c: 2},
+    {q: "The objective lenses are considered the most important part of the:", a: ["Stage", "Microscope", "Base", "Arm"], c: 1},
+    {q: "The basic function of the objective lens is to gather light passing through the:", a: ["Eyepiece", "Arm", "Specimen", "Base"], c: 2},
+    {q: "The objective lens then projects the image into the:", a: ["Stage", "Body of the microscope", "Base", "Light source"], c: 1},
+    {q: "Most quality microscopes use _____ for the objectives.", a: ["Plastic", "Rubber", "Glass", "Wood"], c: 2},
+    {q: "The first objective lens is usually the:", a: ["Medium power objective", "High power objective", "Low power objective", "Iris objective"], c: 2},
+    {q: "The low power objective usually has a magnification of:", a: ["4X", "10X", "43X", "100X"], c: 0},
+    {q: "The medium power objective usually has a magnification of:", a: ["4X", "10X", "43X", "400X"], c: 1},
+    {q: "The high power objective usually has a magnification of:", a: ["4X", "10X", "43X", "80X"], c: 2},
+    {q: "Stage clips are used to:", a: ["Keep the slide in place", "Adjust the light intensity", "Rotate the eyepiece", "Support the arm"], c: 0},
+    {q: "The condenser is located:", a: ["Above the eyepiece", "Within or below the stage", "Under the base only", "In the head only"], c: 1},
+    {q: "The condenser gathers light coming from the:", a: ["Arm", "Light source", "Eyepiece", "Nosepiece"], c: 1},
+    {q: "The condenser concentrates the light into a light cone onto the:", a: ["Base", "Specimen", "Arm", "Clip"], c: 1},
+    {q: "Some condensers can have accessories for:", a: ["Phase contrast and polarized light", "Heating samples", "Stage cleaning", "Measuring voltage"], c: 0},
+    {q: "The diaphragm is normally located:", a: ["Inside the eyepiece", "Under the stage", "On the arm", "In the base only"], c: 1},
+    {q: "The diaphragm adjusts the amount of:", a: ["Magnification", "Light passing into the slide or specimen", "Stage size", "Objective number"], c: 1},
+    {q: "Another name for the diaphragm is the:", a: ["Nosepiece diaphragm", "Sub-stage or aperture diaphragm", "Arm diaphragm", "Focus diaphragm"], c: 1},
+    {q: "There are _____ types of diaphragm mentioned in the text.", a: ["Two", "Three", "Four", "Five"], c: 0},
+    {q: "The simplest and least expensive diaphragm is the:", a: ["Iris diaphragm", "Disc diaphragm", "Polarized diaphragm", "Phase diaphragm"], c: 1},
+    {q: "The disc diaphragm contains:", a: ["A glass mirror", "A rotating disk with openings of different diameters", "A bulb filament", "A movable camera"], c: 1},
+    {q: "The openings in the disc diaphragm are used to:", a: ["Hold the specimen", "Limit the amount of light passing through", "Support the objective lens", "Change stage position"], c: 1},
+    {q: "The better and more expensive diaphragm is the:", a: ["Disc diaphragm", "Iris diaphragm", "LED diaphragm", "Fixed diaphragm"], c: 1},
+    {q: "The iris diaphragm has a:", a: ["Fixed diameter", "Continuously variable diameter", "Double lens", "Rotating stage"], c: 1},
+    {q: "The iris diaphragm is usually controlled by a:", a: ["Screw", "Lever", "Clip", "Tube"], c: 1},
+    {q: "The function of the iris diaphragm is to optimize:", a: ["Resolution, contrast, and sharpness", "Height, length, and width", "Voltage, power, and current", "Rotation, tilt, and balance"], c: 0},
+    {q: "The light source is used to illuminate the:", a: ["Arm", "Base", "Object or specimen", "Eyepiece"], c: 2},
+    {q: "The most common and least expensive illumination bulb is:", a: ["Halogen", "Tungsten", "Fluorescent", "LED"], c: 1},
+    {q: "Tungsten bulbs give off a:", a: ["Blue hue", "Yellowish hue", "Green hue", "Red hue"], c: 1},
+    {q: "Tungsten bulbs are typically:", a: ["5–10 watt", "15–20 watt", "40–60 watt", "80–100 watt"], c: 1},
+    {q: "The hottest light source for a microscope is generally:", a: ["Tungsten", "Halogen", "Fluorescent", "LED"], c: 1},
+    {q: "Halogen light is described as:", a: ["Dim and cool", "Bright, white, and concentrated", "Yellowish and weak", "Soft and blue"], c: 1},
+    {q: "Halogen lamps are more expensive than:", a: ["Fluorescent lamps", "LED lamps", "Tungsten lamps", "Ring lights"], c: 2},
+    {q: "The fluorescent lamp is:", a: ["Cool in temperature", "The hottest light source", "Always yellowish", "Battery operated only"], c: 0},
+    {q: "Fluorescent light is especially good for observing:", a: ["Metal surfaces only", "Live specimens", "Rocks only", "Coins only"], c: 1},
+    {q: "Fluorescent lamps are typically rated:", a: ["1–3 watt", "5–10 watt", "15–20 watt", "50–100 watt"], c: 1},
+    {q: "A fluorescent light attached to observe from above is called a:", a: ["Disk light", "Ring light", "Cone light", "Boom light"], c: 1},
+    {q: "LED stands for:", a: ["Lens Emitting Device", "Light Emitting Diode", "Low Energy Detector", "Light Expansion Display"], c: 1},
+    {q: "LED light sources provide bright light with:", a: ["Very high heat", "Moderate heat", "Virtually no heat", "No brightness"], c: 2},
+    {q: "LED systems are often battery operated, so they are:", a: ["Heavy", "Cordless", "Fixed to the wall", "More expensive than all others in the text"], c: 1},
+    {q: "The head of the microscope connects the eyepiece to the:", a: ["Stage", "Base", "Nosepiece or turret", "Condenser"], c: 2},
+    {q: "Some microscope heads allow tilting from 0° up to:", a: ["30°", "45°", "60°", "90°"], c: 2},
+    {q: "A microscope with a single eyepiece is called:", a: ["Binocular", "Trinocular", "Monocular", "Universal"], c: 2},
+    {q: "A microscope with two eyepieces is called:", a: ["Binocular", "Monocular", "Pillar", "Digital"], c: 0},
+    {q: "A trinocular microscope includes:", a: ["Only one eyepiece", "No viewing head", "A binocular head and an additional port", "Only a camera and no eyepieces"], c: 2},
+    {q: "Most microscopes are called light microscopes because they rely on:", a: ["Heat", "Sound", "Light", "Pressure"], c: 2},
+    {q: "Which of the following is listed as a category of microscope?", a: ["Hydraulic microscope", "Compound microscope", "Steam microscope", "Magnetic microscope"], c: 1},
+    {q: "The compound microscope is also referred to as a:", a: ["Dissecting microscope", "Biological or research microscope", "Metallurgical lamp", "Ring microscope"], c: 1},
+    {q: "The compound microscope is referred to as a:", a: ["Low power microscope", "High power microscope", "Thermal microscope", "Portable microscope"], c: 1},
+    {q: "The magnification range of a compound microscope is about:", a: ["10x to 80x", "40x to 1000x", "5x to 20x", "1000x to 5000x"], c: 1},
+    {q: "Some compound microscopes can go up to:", a: ["200x", "500x", "1500x or 2000x", "80x only"], c: 2},
+    {q: "Much serious work of a compound microscope is done at:", a: ["10x to 40x", "80x to 100x", "400x to 500x", "1000x to 2000x only"], c: 2},
+    {q: "The compound microscope has:", a: ["Two separate light paths", "A single light path through a series of lenses", "No objective lenses", "Only one magnifying lens"], c: 1},
+    {q: "The image in a compound microscope is seen as if it were about:", a: ["10 inches (250 mm) from the eye", "1 inch from the eye", "1 meter from the eye", "50 inches from the eye"], c: 0},
+    {q: "The image produced at the eye by a compound microscope is usually:", a: ["Three-dimensional and upright", "Two-dimensional, reversed, and upside down", "Colored and moving", "Enlarged but not reversed"], c: 1},
+    {q: "The most used light method in a compound microscope is:", a: ["Reflection from above", "Trans-illumination", "Side illumination only", "Infrared illumination"], c: 1},
+    {q: "Trans-illumination means light is projected from:", a: ["Above", "The side", "Below", "Behind the head"], c: 2},
+    {q: "At 400x magnification, a compound microscope can show detail at the:", a: ["Planetary level", "Cellular level", "Mechanical level only", "Surface level only"], c: 1},
+    {q: "Stereo microscopes are the _____ most common type of microscope.", a: ["First", "Second", "Third", "Least"], c: 1},
+    {q: "Stereo microscopes are also referred to as:", a: ["Research microscopes", "Dissection or inspection microscopes", "Electron beam microscopes", "Phase contrast microscopes only"], c: 1},
+    {q: "The stereo microscope is considered a:", a: ["High power microscope", "Low power microscope", "Digital microscope only", "Phase microscope only"], c: 1},
+    {q: "The magnification range of a stereo microscope is about:", a: ["10x to 80x", "40x to 1000x", "100x to 1500x", "500x to 2000x"], c: 0},
+    {q: "The most popular magnification range for stereo microscopes is:", a: ["1x to 5x", "10x to 40x", "100x to 500x", "500x to 1000x"], c: 1},
+    {q: "A stereo microscope produces a true:", a: ["2-D image", "Colored image only", "Stereo image", "Reversed image only"], c: 2},
+    {q: "A stereo microscope has:", a: ["One light path only", "Two separate light paths", "No light path", "Three light paths only"], c: 1},
+    {q: "The image produced by a stereo microscope is:", a: ["Two-dimensional", "Upside down", "Three-dimensional", "Invisible without a camera"], c: 2},
+    {q: "Most stereo microscopes have built-in illumination from:", a: ["Top only", "Bottom only", "Both top and bottom", "Neither top nor bottom"], c: 2}
+];
+
+let questionQueue = []; 
+let currentQuestion = null;
+let totalQuestionsCount = 0;
+let score = 0;
+let wrongCount = 0;
+let answeredCount = 0;
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("max-q-count").innerText = allQuestions.length;
+    document.getElementById("custom-count").max = allQuestions.length;
+});
+
+function startCustomQuiz() {
+    let inputVal = document.getElementById("custom-count").value;
+    let count = parseInt(inputVal);
+    let errorMsg = document.getElementById("error-msg");
+
+    if (isNaN(count) || count < 1) {
+        errorMsg.innerText = "⚠️ يرجى إدخال رقم صحيح أكبر من 0";
+        errorMsg.style.display = "block";
+        return;
+    }
+    if (count > allQuestions.length) {
+        errorMsg.innerText = `⚠️ أقصى عدد متاح هو ${allQuestions.length} سؤال فقط!`;
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    errorMsg.style.display = "none";
+    startQuiz(count);
+}
+
+function startQuiz(count) {
+    document.getElementById("setup-screen").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    document.getElementById("stats-board").style.display = "grid";
+
+    let shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+    questionQueue = shuffled.slice(0, count);
+    totalQuestionsCount = count;
+    
+    score = 0;
+    wrongCount = 0;
+    answeredCount = 0;
+    
+    nextQuestion();
+}
+
+function updateStats() {
+    let remaining = questionQueue.length + (currentQuestion ? 1 : 0);
+    document.getElementById("val-ans").innerText = answeredCount;
+    document.getElementById("val-rem").innerText = remaining;
+    document.getElementById("val-cor").innerText = score;
+    document.getElementById("val-wro").innerText = wrongCount;
+    document.getElementById("btn-skip").disabled = (questionQueue.length === 0);
+}
+
+function nextQuestion() {
+    if (questionQueue.length === 0) {
+        showResults();
+        return;
+    }
+
+    currentQuestion = questionQueue.shift();
+    updateStats();
+
+    document.getElementById("question").innerText = currentQuestion.q;
+    const optionsBox = document.getElementById("options");
+    optionsBox.innerHTML = "";
+    
+    currentQuestion.a.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = option;
+        btn.classList.add("option-btn");
+        btn.onclick = () => checkAnswer(index, btn);
+        optionsBox.appendChild(btn);
+    });
+    
+    document.getElementById("skip-container").style.display = "block";
+}
+
+function checkAnswer(selected, btn) {
+    document.getElementById("skip-container").style.display = "none"; 
+    const allBtns = document.querySelectorAll(".option-btn");
+    allBtns.forEach(b => b.disabled = true);
+    
+    if (selected === currentQuestion.c) {
+        btn.classList.add("correct");
+        score++;
+    } else {
+        btn.classList.add("incorrect");
+        allBtns[currentQuestion.c].classList.add("correct");
+        wrongCount++;
+    }
+    
+    answeredCount++;
+    currentQuestion = null; 
+    updateStats();
+
+    setTimeout(() => {
+        nextQuestion();
+    }, 1500);
+}
+
+function skipQuestion() {
+    questionQueue.push(currentQuestion);
+    currentQuestion = null;
+    nextQuestion();
+}
+
+function showResults() {
+    document.getElementById("game").style.display = "none";
+    document.getElementById("stats-board").style.display = "none";
+    document.getElementById("result-screen").style.display = "block";
+    
+    const percent = Math.round((score / totalQuestionsCount) * 100);
+    document.getElementById("final-score").innerText = percent + "%";
+    document.getElementById("score-text").innerText = `أحسنت! لقد أجبت بشكل صحيح على ${score} من أصل ${totalQuestionsCount} سؤال.`;
+}
+</script>
+
+</body>
+</html>
