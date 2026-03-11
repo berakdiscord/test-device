@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار جهاز التقطير - الوضع الليلي</title>
+    <title>اختبار جهاز التقطير - مخصص</title>
     <style>
-        /* تم تغيير الألوان هنا لتناسب الوضع الليلي المريح للعين */
         :root { 
-            --primary: #1abc9c; 
+            --primary: #1abc9c; /* اللون الأخضر المميز لجهاز التقطير */
             --bg: #121212; 
             --container-bg: #1e1e1e; 
             --text-main: #e0e0e0; 
@@ -25,26 +24,48 @@
         .header { border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; text-align: center; }
         .header h1 { font-size: 1.6rem; color: var(--primary); margin: 0; }
         
-        /* شاشة البداية */
+        /* شاشة إعداد الاختبار */
         .setup-screen { text-align: center; padding: 20px 0; }
-        .setup-screen h2 { color: var(--text-main); margin-bottom: 25px; font-weight: normal; }
+        .setup-screen h2 { color: var(--text-main); margin-bottom: 10px; font-weight: normal; }
+        .setup-screen p { color: var(--text-sec); margin-bottom: 25px; font-size: 1rem; }
+        
         .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
-        .btn-setup { background: var(--container-bg); border: 2px solid var(--primary); color: var(--primary); padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
-        .btn-setup:hover { background: var(--primary); color: #fff; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3); }
+        
+        /* تصميم مربع الإدخال */
+        .custom-input {
+            background: var(--btn-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+        .custom-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(26, 188, 156, 0.2);
+        }
 
-        /* لوحة الإحصائيات بالوضع الليلي */
+        .btn-setup { background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
+        .btn-setup:hover { background: #16a085; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4); }
+
         .stats-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; text-align: center; }
         .stat-box { background: var(--btn-bg); padding: 10px 5px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border-color); }
         .stat-cor { border-bottom: 3px solid var(--right); color: var(--right); }
         .stat-wro { border-bottom: 3px solid var(--wrong); color: var(--wrong); }
         .stat-rem { border-bottom: 3px solid var(--warning); color: var(--warning); }
-        .stat-ans { border-bottom: 3px solid #3498db; color: #3498db; }
+        .stat-ans { border-bottom: 3px solid var(--primary); color: var(--primary); }
         .stat-box span { display: block; font-size: 1.4rem; margin-top: 5px; color: var(--text-main); }
 
         .question-text { font-size: 1.2rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.6; font-weight: 600; text-align: left; direction: ltr; }
         .options-container { display: grid; gap: 12px; }
         .option-btn { background: var(--btn-bg); border: 2px solid var(--border-color); color: var(--text-main); padding: 15px; border-radius: 10px; cursor: pointer; text-align: left; font-size: 1rem; transition: all 0.2s; direction: ltr; }
-        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #233532; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #182a26; }
         .option-btn.correct { background-color: rgba(46, 204, 113, 0.2); border-color: var(--right); color: var(--right); }
         .option-btn.incorrect { background-color: rgba(231, 76, 60, 0.2); border-color: var(--wrong); color: var(--wrong); }
         
@@ -59,7 +80,7 @@
         .btn-home:hover { background: #444; color: #fff; }
         
         .result-screen { text-align: center; display: none; }
-        .score { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 20px 0; text-shadow: 0 0 10px rgba(26,188,156,0.3); }
+        .score { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 20px 0; text-shadow: 0 0 10px rgba(26, 188, 156, 0.3); }
         #score-text { color: var(--text-sec); font-size: 1.1rem; }
         
         #game { display: none; }
@@ -77,11 +98,15 @@
     </div>
 
     <div class="setup-screen" id="setup-screen">
-        <h2>اختر عدد الأسئلة لبدء الاختبار:</h2>
+        <h2>كم عدد الأسئلة التي تريد الإجابة عليها؟</h2>
+        <p>الأسئلة المتاحة في بنك الأسئلة: <span id="max-q-count" style="color: var(--primary); font-weight: bold;">0</span> سؤال</p>
+        
         <div class="setup-btns">
-            <button class="btn-setup" onclick="startQuiz(25)">اختبار قصير (25 سؤال)</button>
-            <button class="btn-setup" onclick="startQuiz(50)">اختبار متوسط (50 سؤال)</button>
-            <button class="btn-setup" onclick="startQuiz(75)">اختبار شامل (كل الأسئلة)</button>
+            <input type="number" id="custom-count" class="custom-input" min="1" placeholder="مثال: 50" value="25">
+            
+            <button class="btn-setup" onclick="startCustomQuiz()">🚀 ابدأ الاختبار</button>
+            
+            <p id="error-msg" style="color: var(--wrong); display: none; margin-top: 5px; font-weight: bold; font-size: 0.9rem;"></p>
         </div>
     </div>
 
@@ -114,7 +139,7 @@
 </div>
 
 <script>
-// بنك الأسئلة الشامل (70 سؤال)
+// بنك أسئلة جهاز التقطير (70 سؤال)
 const allQuestions = [
     { q: "What is the main purpose of distillation?", a: ["To separate mixtures based on solubility", "To separate liquids based on boiling points", "To chemically react two substances", "To create a solid from a liquid"], c: 1 },
     { q: "Which of the following is NOT a factor affecting successful distillation?", a: ["Difference in boiling points", "Vapour pressure differences", "Type of apparatus used", "Colour of the liquid"], c: 3 },
@@ -200,16 +225,43 @@ let score = 0;
 let wrongCount = 0;
 let answeredCount = 0;
 
+// عرض عدد الأسئلة المتاحة تلقائياً عند تحميل الصفحة
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("max-q-count").innerText = allQuestions.length;
+    document.getElementById("custom-count").max = allQuestions.length;
+});
+
+// دالة بدء الاختبار بالرقم المدخل
+function startCustomQuiz() {
+    let inputVal = document.getElementById("custom-count").value;
+    let count = parseInt(inputVal);
+    let errorMsg = document.getElementById("error-msg");
+
+    // التحقق من صحة الرقم
+    if (isNaN(count) || count < 1) {
+        errorMsg.innerText = "⚠️ يرجى إدخال رقم صحيح أكبر من 0";
+        errorMsg.style.display = "block";
+        return;
+    }
+    if (count > allQuestions.length) {
+        errorMsg.innerText = `⚠️ أقصى عدد متاح هو ${allQuestions.length} سؤال فقط!`;
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    // إذا كان الرقم صحيحاً، ابدأ الاختبار
+    errorMsg.style.display = "none";
+    startQuiz(count);
+}
+
 function startQuiz(count) {
     document.getElementById("setup-screen").style.display = "none";
     document.getElementById("game").style.display = "block";
     document.getElementById("stats-board").style.display = "grid";
 
     let shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-    let maxQuestions = Math.min(count, allQuestions.length);
-    
-    questionQueue = shuffled.slice(0, maxQuestions);
-    totalQuestionsCount = maxQuestions;
+    questionQueue = shuffled.slice(0, count);
+    totalQuestionsCount = count;
     
     score = 0;
     wrongCount = 0;
