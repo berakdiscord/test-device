@@ -294,29 +294,49 @@ function nextQuestion() {
     const optionsBox = document.getElementById("options");
     optionsBox.innerHTML = "";
     
-    currentQuestion.a.forEach((option, index) => {
+    // --- ميزة خلط الخيارات العشوائي (Shuffling) ---
+    // نقوم بربط كل خيار بمعلومة (هل هو صحيح أم لا) قبل الخلط
+    let shuffledOptions = currentQuestion.a.map((option, index) => {
+        return { text: option, isCorrect: (index === currentQuestion.c) };
+    });
+    
+    // خلط أماكن الخيارات عشوائياً
+    shuffledOptions.sort(() => Math.random() - 0.5); 
+    // ----------------------------------------------
+
+    shuffledOptions.forEach((opt) => {
         const btn = document.createElement("button");
-        btn.innerText = option;
+        btn.innerText = opt.text;
         btn.classList.add("option-btn");
-        btn.onclick = () => checkAnswer(index, btn);
+        // نحفظ داخل الزر معلومة مخفية إذا كان هو الصح أم الخطأ
+        btn.dataset.correct = opt.isCorrect; 
+        
+        btn.onclick = () => checkAnswer(opt.isCorrect, btn);
         optionsBox.appendChild(btn);
     });
     
     document.getElementById("skip-container").style.display = "block";
 }
 
-function checkAnswer(selected, btn) {
+function checkAnswer(isCorrect, btn) {
     document.getElementById("skip-container").style.display = "none"; 
     const allBtns = document.querySelectorAll(".option-btn");
     allBtns.forEach(b => b.disabled = true);
     
-    if (selected === currentQuestion.c) {
+    if (isCorrect) {
+        // إذا كانت الإجابة صحيحة
         btn.classList.add("correct");
         score++;
     } else {
+        // إذا كانت خاطئة
         btn.classList.add("incorrect");
-        allBtns[currentQuestion.c].classList.add("correct");
         wrongCount++;
+        // يبحث النظام عن الزر الصحيح (الذي تم تغيير مكانه) ويلونه بالأخضر
+        allBtns.forEach(b => {
+            if (b.dataset.correct === "true") {
+                b.classList.add("correct");
+            }
+        });
     }
     
     answeredCount++;
