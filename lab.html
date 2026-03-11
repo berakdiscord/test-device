@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار تصميم المختبرات - الوضع الليلي</title>
+    <title>اختبار تصميم المختبرات - مخصص</title>
     <style>
         :root { 
             --primary: #3498db; 
@@ -24,11 +24,35 @@
         .header { border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; text-align: center; }
         .header h1 { font-size: 1.6rem; color: var(--primary); margin: 0; }
         
+        /* شاشة إعداد الاختبار الجديدة */
         .setup-screen { text-align: center; padding: 20px 0; }
-        .setup-screen h2 { color: var(--text-main); margin-bottom: 25px; font-weight: normal; }
+        .setup-screen h2 { color: var(--text-main); margin-bottom: 10px; font-weight: normal; }
+        .setup-screen p { color: var(--text-sec); margin-bottom: 25px; font-size: 1rem; }
+        
         .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
-        .btn-setup { background: var(--container-bg); border: 2px solid var(--primary); color: var(--primary); padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
-        .btn-setup:hover { background: var(--primary); color: #fff; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); }
+        
+        /* تصميم مربع الإدخال */
+        .custom-input {
+            background: var(--btn-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+        .custom-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn-setup { background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
+        .btn-setup:hover { background: #2980b9; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4); }
 
         .stats-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; text-align: center; }
         .stat-box { background: var(--btn-bg); padding: 10px 5px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border-color); }
@@ -74,11 +98,15 @@
     </div>
 
     <div class="setup-screen" id="setup-screen">
-        <h2>اختر عدد الأسئلة لبدء الاختبار:</h2>
+        <h2>كم عدد الأسئلة التي تريد الإجابة عليها؟</h2>
+        <p>الأسئلة المتاحة في بنك الأسئلة: <span id="max-q-count" style="color: var(--primary); font-weight: bold;">0</span> سؤال</p>
+        
         <div class="setup-btns">
-            <button class="btn-setup" onclick="startQuiz(15)">اختبار قصير (15 سؤال)</button>
-            <button class="btn-setup" onclick="startQuiz(30)">اختبار متوسط (30 سؤال)</button>
-            <button class="btn-setup" onclick="startQuiz(50)">اختبار شامل (50 سؤال)</button>
+            <input type="number" id="custom-count" class="custom-input" min="1" placeholder="مثال: 50" value="30">
+            
+            <button class="btn-setup" onclick="startCustomQuiz()">🚀 ابدأ الاختبار</button>
+            
+            <p id="error-msg" style="color: var(--wrong); display: none; margin-top: 5px; font-weight: bold; font-size: 0.9rem;"></p>
         </div>
     </div>
 
@@ -102,7 +130,7 @@
         <h2>اكتمل الاختبار!</h2>
         <div class="score" id="final-score">0%</div>
         <p id="score-text"></p>
-        <button class="btn" style="background: var(--primary); color:#121212; margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem; padding: 12px 30px;" onclick="location.reload()">إعادة الاختبار</button>
+        <button class="btn" style="background: var(--primary); color:#fff; margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem; padding: 12px 30px;" onclick="location.reload()">إعادة الاختبار</button>
     </div>
 
     <div class="footer">
@@ -111,58 +139,128 @@
 </div>
 
 <script>
-// بنك الأسئلة (50 سؤال)
+// بنك الأسئلة الشامل (أسئلة تصميم المختبرات)
 const allQuestions = [
-    { q: "What is the main goal of good laboratory design?", a: ["Decoration", "Safety and efficiency", "Entertainment", "Marketing"], c: 1 },
-    { q: "Laboratory design should consider the needs of:", a: ["Visitors only", "Scientific and operational work", "Cleaning staff only", "Security staff only"], c: 1 },
-    { q: "Laboratories can be designed for:", a: ["Research only", "Diagnostics only", "Education only", "Research, diagnostics, education, or manufacturing"], c: 3 },
-    { q: "Which factor must be considered when designing a laboratory?", a: ["Color of walls only", "Future technological changes", "Music system", "Advertising"], c: 1 },
-    { q: "Safety in laboratory design aims to protect:", a: ["Equipment only", "Users and environment", "Buildings only", "Furniture only"], c: 1 },
-    { q: "Hazardous materials must be considered in:", a: ["Laboratory decoration", "Safety protocols", "Furniture selection", "Wall painting"], c: 1 },
-    { q: "Efficient workflow in laboratories helps to:", a: ["Increase unnecessary movement", "Reduce efficiency", "Improve work performance", "Slow down work"], c: 2 },
-    { q: "Laboratory layout should minimize:", a: ["Work", "Movement and contamination", "Equipment use", "Lighting"], c: 1 },
-    { q: "Flexibility in lab design means:", a: ["Fixed furniture only", "Modular and adaptable design", "No equipment changes", "Limited space"], c: 1 },
-    { q: "Energy-efficient laboratory design aims to:", a: ["Increase power consumption", "Reduce environmental impact", "Waste energy", "Increase temperature"], c: 1 },
-    { q: "Laboratories are often divided into functional:", a: ["Rooms", "Zones", "Buildings", "Floors"], c: 1 },
-    { q: "Preparation areas in laboratories are used for:", a: ["Entertainment", "Experiment preparation", "Sleeping", "Storage only"], c: 1 },
-    { q: "Smooth movement flow helps reduce:", a: ["Research quality", "Cross-contamination", "Lighting efficiency", "Equipment cost"], c: 1 },
-    { q: "Ventilation in laboratories is important for:", a: ["Decoration", "Air quality and safety", "Noise reduction only", "Color design"], c: 1 },
-    { q: "Airflow in labs helps to remove:", a: ["Furniture", "Contaminants", "Researchers", "Equipment"], c: 1 },
-    { q: "Workbenches should be:", a: ["Fragile", "Decorative", "Durable and chemical-resistant", "Wooden only"], c: 2 },
-    { q: "Workstations are designed for:", a: ["Entertainment", "Laboratory tasks", "Sleeping", "Meetings only"], c: 1 },
-    { q: "Hazardous materials should be stored in:", a: ["Open shelves", "Locked cabinets", "Desks", "Drawers only"], c: 1 },
-    { q: "Temperature-sensitive materials require:", a: ["Hot storage", "Cold storage", "Open storage", "Dry storage only"], c: 1 },
-    { q: "Proper lighting in laboratories helps to:", a: ["Increase errors", "Reduce focus", "Reduce errors and improve concentration", "Increase noise"], c: 2 },
-    { q: "Fume hoods are used when handling:", a: ["Water", "Chemicals", "Paper", "Books"], c: 1 },
-    { q: "Biosafety cabinets are used for:", a: ["Food storage", "Handling biological materials", "Furniture storage", "Equipment repair"], c: 1 },
-    { q: "Waste management systems are used for:", a: ["Decoration", "Disposal of laboratory waste", "Storing chemicals", "Air purification"], c: 1 },
-    { q: "Laboratory waste may include:", a: ["Chemical waste", "Biological waste", "Radioactive waste", "All of the above"], c: 3 },
-    { q: "Fire safety equipment includes:", a: ["Fire extinguishers", "Computers", "Chairs", "Lamps"], c: 0 },
-    { q: "Emergency exits in laboratories should be:", a: ["Hidden", "Clearly accessible", "Locked", "Decorative"], c: 1 },
-    { q: "Emergency stations may include:", a: ["Eyewash stations", "Showers", "First aid areas", "All of the above"], c: 3 },
-    { q: "Biosafety levels define:", a: ["Laboratory colors", "Containment levels for biological materials", "Lighting systems", "Furniture design"], c: 1 },
-    { q: "BSL stands for:", a: ["Biological Safety Layout", "Biosafety Level", "Basic Safety Lab", "Biological System Lab"], c: 1 },
-    { q: "User comfort in laboratories is important because:", a: ["Labs are relaxing places", "Labs are high-stress environments", "Work is easy", "No equipment is used"], c: 1 },
-    { q: "Adjustable workstations help:", a: ["Improve user comfort", "Reduce safety", "Increase contamination", "Increase noise"], c: 0 },
-    { q: "Consumable furniture refers to:", a: ["Temporary furniture used in labs", "Food furniture", "Electronic furniture", "Decorative furniture"], c: 0 },
-    { q: "Sustainable laboratory design focuses on:", a: ["Environmental protection", "Decoration", "High cost", "Increased waste"], c: 0 },
-    { q: "Water conservation in labs can be achieved by:", a: ["High-flow fixtures", "Low-flow fixtures", "No water use", "Open pipes"], c: 1 },
-    { q: "Energy-efficient equipment helps:", a: ["Increase pollution", "Reduce energy consumption", "Waste electricity", "Increase heat"], c: 1 },
-    { q: "Laboratory design must consider:", a: ["Safety", "Efficiency", "Environmental impact", "All of the above"], c: 3 },
-    { q: "Laboratory layout planning should focus on:", a: ["Worker movement", "Equipment placement", "Safety", "All of the above"], c: 3 },
-    { q: "Poor laboratory design may lead to:", a: ["Increased safety", "Accidents and inefficiency", "Faster experiments", "Better results"], c: 1 },
-    { q: "Ventilation systems help maintain:", a: ["Air pressure only", "Air quality", "Room color", "Furniture position"], c: 1 },
-    { q: "Workbench materials should resist:", a: ["Water only", "Chemicals", "Air only", "Light"], c: 1 },
-    { q: "Administrative spaces in labs are used for:", a: ["Experiments", "Office tasks", "Chemical storage", "Waste disposal"], c: 1 },
-    { q: "Specialized equipment areas are designed for:", a: ["Large instruments", "Chairs", "Paper storage", "Lighting only"], c: 0 },
-    { q: "Good laboratory design improves:", a: ["Productivity", "Safety", "Organization", "All of the above"], c: 3 },
-    { q: "Laboratory airflow design mainly prevents:", a: ["Heat loss", "Contamination spread", "Lighting problems", "Noise"], c: 1 },
-    { q: "Safety protocols should be:", a: ["Ignored", "Integrated into lab design", "Used only during emergencies", "Used only by managers"], c: 1 },
-    { q: "Laboratories are commonly used in:", a: ["Hospitals", "Universities", "Industries", "All of the above"], c: 3 },
-    { q: "Adaptable laboratory design helps with:", a: ["Future research changes", "Furniture decoration", "Music systems", "Lighting color"], c: 0 },
-    { q: "Chemical waste disposal should be:", a: ["Random", "Controlled and managed", "Ignored", "Mixed with normal waste"], c: 1 },
-    { q: "Biosafety cabinets help protect:", a: ["Researchers", "Samples", "Environment", "All of the above"], c: 3 },
-    { q: "A well-designed laboratory primarily supports:", a: ["Safe and effective scientific work", "Entertainment", "Tourism", "Advertising"], c: 0 }
+    { q: "Why is good laboratory design important?", a: ["Only to reduce construction costs", "To ensure safety, efficiency, and compliance with standards", "Only to improve building appearance", "To reduce the number of workers"], c: 1 },
+    { q: "A well-planned laboratory should consider the specific scientific and operational needs of:", a: ["Only academic institutions", "Only industrial facilities", "The research or medical work conducted within it", "Only healthcare settings"], c: 2 },
+    { q: "Laboratory design may vary depending on whether the laboratory is in:", a: ["A shopping center", "A healthcare setting, academic institution, or industrial facility", "A residential house only", "A sports complex"], c: 1 },
+    { q: "The lecture covers laboratory design principles including:", a: ["Music, art, and architecture", "Layout, safety, equipment, and environmental considerations", "Marketing and management only", "Finance and accounting"], c: 1 },
+    { q: "The purpose of a laboratory may include all of the following except:", a: ["Research", "Diagnostics", "Education", "Transportation"], c: 3 },
+    { q: "Different laboratory purposes require:", a: ["The same design requirements", "Different design requirements", "No design planning", "Only decorative changes"], c: 1 },
+    { q: "The design of a laboratory should support:", a: ["Only current building style", "The type of testing and research activities planned", "Only furniture arrangement", "External appearance only"], c: 1 },
+    { q: "Laboratory adaptability is important to meet future changes in:", a: ["Paint color", "Technology or research focus", "Parking area only", "Staff uniforms"], c: 1 },
+    { q: "Which of the following is listed as an effective laboratory design principle?", a: ["Noise increase", "Safety", "Random layout", "Reduced ventilation"], c: 1 },
+    { q: "Safety protocols should be embedded into the layout to protect:", a: ["Only users", "Only equipment", "Both users and the environment", "Only visitors"], c: 2 },
+    { q: "Which of the following must be considered under safety in laboratory design?", a: ["Wall color", "Hazardous materials, biosafety levels, and contamination risks", "Number of windows only", "Cafeteria size"], c: 1 },
+    { q: "Workflow efficiency in laboratory design means that the layout should:", a: ["Increase unnecessary movement", "Minimize unnecessary movement", "Place equipment randomly", "Reduce storage areas only"], c: 1 },
+    { q: "For efficient workflow, equipment and materials should be:", a: ["Hidden from users", "Logically positioned", "Stored outside the laboratory", "Moved daily"], c: 1 },
+    { q: "Flexibility in laboratory design is important because:", a: ["Scientific work often changes", "Laboratories never change", "Equipment is never replaced", "Safety rules are removed"], c: 0 },
+    { q: "Laboratories should be designed with modular features to allow:", a: ["Easy reconfiguration", "Permanent fixed arrangement only", "Reduced lighting", "Less storage space"], c: 0 },
+    { q: "Energy-efficient laboratory design aims to:", a: ["Increase environmental impact", "Minimize environmental impact", "Eliminate all equipment", "Reduce user comfort"], c: 1 },
+    { q: "Laboratories are typically divided into zones based on:", a: ["Paint type", "Function", "Window size", "Employee age"], c: 1 },
+    { q: "Examples of laboratory zones mentioned in the text include:", a: ["Sleeping areas and kitchens", "Preparation areas, storage, administrative spaces, and specialized equipment areas", "Sports areas and libraries", "Elevators and parking zones"], c: 1 },
+    { q: "The design must account for smooth movement flow in order to minimize:", a: ["Energy use", "Cross-contamination", "Lighting levels", "Furniture use"], c: 1 },
+    { q: "Proper ventilation in a laboratory is essential to:", a: ["Increase noise", "Maintain air quality, remove contaminants, and ensure comfort and safety", "Replace safety protocols", "Reduce the number of workers"], c: 1 },
+    { q: "Why does good laboratory design play a critical role?", a: ["It reduces staff salaries", "It ensures safety, efficiency, and compliance with standards", "It replaces all laboratory equipment", "It eliminates the need for supervision"], c: 1 },
+    { q: "A well-planned laboratory considers the specific scientific and operational needs of:", a: ["Only the building owner", "The research or medical work conducted in it", "Only the cleaning staff", "The administrative office only"], c: 1 },
+    { q: "Laboratory design applies to laboratories in:", a: ["Healthcare settings only", "Academic institutions only", "Industrial facilities only", "Healthcare, academic, and industrial facilities"], c: 3 },
+    { q: "The lecture covers all of the following except:", a: ["Layout", "Safety", "Equipment", "Marketing"], c: 3 },
+    { q: "One of the first questions in laboratory design is whether the lab is for:", a: ["Sports or entertainment", "Research, diagnostics, education, or manufacturing", "Housing or transport", "Cooking or storage only"], c: 1 },
+    { q: "According to the text, each laboratory purpose needs:", a: ["The same design requirements", "Different design requirements", "No design requirements", "Only decorative changes"], c: 1 },
+    { q: "The design should support the type of:", a: ["Furniture colors", "Testing and research activities planned", "Building materials only", "Lighting style only"], c: 1 },
+    { q: "Laboratory design should consider adaptability to future:", a: ["Fashion trends", "Changes in technology or research focus", "Staff uniforms", "Construction companies"], c: 1 },
+    { q: "Safety is listed in the text as a:", a: ["Minor optional feature", "Design principle", "Financial issue", "Decoration standard"], c: 1 },
+    { q: "Safety protocols need to be embedded into the layout to protect:", a: ["Only users", "Only equipment", "Both users and the environment", "Only visitors"], c: 2 },
+    { q: "Which of the following must be considered in laboratory safety design?", a: ["Wall paint only", "Hazardous materials", "Cafeteria layout", "Parking area size"], c: 1 },
+    { q: "Another safety-related factor mentioned in the text is:", a: ["Window curtains", "Biosafety levels", "Elevator speed", "Office decoration"], c: 1 },
+    { q: "Contamination risks must be considered as part of:", a: ["Laboratory safety", "Exterior building design only", "Furniture arrangement only", "Administrative planning only"], c: 0 },
+    { q: "Workflow efficiency means the design should:", a: ["Increase unnecessary movement", "Facilitate efficient workflow", "Reduce all equipment", "Eliminate storage"], c: 1 },
+    { q: "To improve workflow efficiency, the layout should minimize:", a: ["Ventilation", "Unnecessary movement", "Safety signs", "Workbenches"], c: 1 },
+    { q: "For efficient workflow, equipment and materials should be:", a: ["Randomly positioned", "Logically positioned", "Hidden from users", "Stored outside the lab"], c: 1 },
+    { q: "Flexibility in laboratory design is important because:", a: ["Scientific work often changes", "Labs never change", "Equipment is always fixed forever", "Research does not develop"], c: 0 },
+    { q: "Flexibility is achieved by using:", a: ["Fragile materials", "Modular features", "Less equipment", "Locked doors only"], c: 1 },
+    { q: "Modular features allow laboratories to be:", a: ["Permanently fixed", "Easily reconfigured", "Less safe", "More expensive only"], c: 1 },
+    { q: "Energy efficiency is important because many laboratories:", a: ["Use very little energy", "Consume high amounts of energy", "Have no electrical systems", "Depend only on sunlight"], c: 1 },
+    { q: "Energy-efficient laboratory design should aim to minimize:", a: ["Number of workers", "Environmental impact", "Safety procedures", "Storage capacity"], c: 1 },
+    { q: "Laboratory layout includes consideration of:", a: ["Zoning", "Advertising", "Uniform color", "Employee salary"], c: 0 },
+    { q: "Laboratories are typically divided into zones based on:", a: ["Shape of the building", "Function", "Number of chairs", "Wall height"], c: 1 },
+    { q: "Which of the following is mentioned as a laboratory zone?", a: ["Preparation area", "Dining room", "Sleeping area", "Lobby shop"], c: 0 },
+    { q: "Which of the following is also listed as a laboratory zone?", a: ["Playground", "Storage", "Garage", "Bathroom only"], c: 1 },
+    { q: "Administrative spaces are mentioned in the text as part of:", a: ["Zoning", "Waste management", "Lighting", "User comfort only"], c: 0 },
+    { q: "Specialized equipment areas are included under:", a: ["Safety", "Zoning", "Fire protection only", "Furniture design only"], c: 1 },
+    { q: "Movement flow in the laboratory should be designed to be:", a: ["Confusing", "Smooth", "Circular only", "Restricted completely"], c: 1 },
+    { q: "Smooth movement flow helps to minimize:", a: ["Productivity", "Cross-contamination", "User comfort", "Lighting intensity"], c: 1 },
+    { q: "Proper ventilation is essential to maintain:", a: ["Wall color", "Air quality", "Furniture size", "Room decoration"], c: 1 },
+    { q: "Ventilation also helps to:", a: ["Remove contaminants", "Reduce storage", "Eliminate workstations", "Replace safety rules"], c: 0 },
+    { q: "Proper ventilation helps ensure user:", a: ["Comfort and safety", "Salary and training", "Speed and silence", "Decoration and style"], c: 0 },
+    { q: "Which of the following is one of the key elements in laboratory design?", a: ["Workbenches and workstations", "Cafeteria design", "Parking system", "Reception desk only"], c: 0 },
+    { q: "Workbenches and workstations should be:", a: ["Fragile and decorative", "Durable, chemical-resistant, and well designed", "Temporary and soft", "Light and foldable only"], c: 1 },
+    { q: "Storage in laboratories may include:", a: ["Open shelves for all materials", "Locked cabinets for hazardous materials", "Outdoor storage only", "Wooden boxes only"], c: 1 },
+    { q: "Storage should also include cold storage for:", a: ["Office supplies", "Temperature-sensitive items", "Heavy machinery", "Furniture"], c: 1 },
+    { q: "Proper lighting in a laboratory helps to reduce:", a: ["Storage needs", "Errors", "Ventilation", "Waste only"], c: 1 },
+    { q: "Proper lighting also improves:", a: ["Focus", "Noise", "Heat", "Movement speed"], c: 0 },
+    { q: "Which of the following is essential in laboratories that handle chemicals or biohazards?", a: ["Waiting rooms", "Fume hoods and biosafety cabinets", "Decorative windows", "Soft seating"], c: 1 },
+    { q: "Waste management systems should be integrated for:", a: ["Food waste only", "Chemical, biological, and radioactive waste", "Paper waste only", "Office waste only"], c: 1 },
+    { q: "Fire extinguishers are essential under:", a: ["User comfort", "Fire safety", "Lighting", "Zoning"], c: 1 },
+    { q: "Clear emergency exits are part of:", a: ["Fire safety", "Storage", "Equipment layout", "Energy efficiency only"], c: 0 },
+    { q: "Emergency protocols should provide easy access to:", a: ["Coffee machines", "Emergency stations", "Administrative desks", "Research offices"], c: 1 },
+    { q: "An example of an emergency station mentioned in the text is:", a: ["Refrigerator", "Eyewash station", "Workbench", "File cabinet"], c: 1 },
+    { q: "Another emergency station mentioned is:", a: ["Shower", "Camera", "Computer", "Air conditioner"], c: 0 },
+    { q: "BSL in laboratory design stands for:", a: ["Biological Safety Load", "Biosafety Levels", "Basic Science Laboratory", "Biosecure Storage Limit"], c: 1 },
+    { q: "Biosafety levels define:", a: ["Furniture quality", "Containment levels for laboratories handling biological materials", "Lighting intensity", "Water pressure"], c: 1 },
+    { q: "Laboratories are often described in the text as:", a: ["Relaxed environments", "High-stress environments", "Outdoor environments", "Silent environments"], c: 1 },
+    { q: "Because laboratories are often high-stress environments, designs should consider:", a: ["User comfort", "Wall colors only", "Equipment cost only", "Parking space only"], c: 0 },
+    { q: "One way to improve user comfort is by providing:", a: ["Fixed workstations only", "Adjustable workstations", "Less lighting", "No seating"], c: 1 },
+    { q: "The text also mentions the use of:", a: ["Consumable furniture", "Steel-only furniture", "Outdoor furniture", "Foldable beds"], c: 0 },
+    { q: "Environmental considerations include:", a: ["Sound systems", "Water and energy conservation", "Office decorations", "Transportation design"], c: 1 },
+    { q: "Sustainable laboratory design incorporates:", a: ["Low-flow fixtures", "High-flow fixtures only", "No plumbing", "Decorative fixtures only"], c: 0 },
+    { q: "Sustainable design also includes:", a: ["Energy-efficient equipment", "More paper use", "Larger rooms only", "More lighting errors"], c: 0 },
+    { q: "Good laboratory design supports compliance with:", a: ["Fashion rules", "Standards", "Personal opinions", "Building color codes only"], c: 1 },
+    { q: "The design requirements of a laboratory depend on its:", a: ["Purpose and function", "Exterior paint", "Number of floors only", "Window shape only"], c: 0 },
+    { q: "Research, diagnostics, education, and manufacturing are examples of laboratory:", a: ["Furniture types", "Purposes", "Hazards", "Lighting systems"], c: 1 },
+    { q: "The laboratory design should be able to meet future:", a: ["Noise levels", "Changes and advancements", "Staff vacations", "Paint replacements"], c: 1 },
+    { q: "Hazardous materials must be considered in order to improve:", a: ["Decoration", "Safety", "Furniture selection", "Administrative planning"], c: 1 },
+    { q: "A laboratory layout should support smooth flow mainly to prevent:", a: ["Overspending", "Cross-contamination", "Poor furniture quality", "Color mismatch"], c: 1 },
+    { q: "Preparation areas are an example of laboratory:", a: ["Waste systems", "Zones", "Furniture types", "Emergency stations"], c: 1 },
+    { q: "Storage areas are usually separated because of laboratory:", a: ["Zoning by function", "User comfort only", "Lighting requirements only", "Exterior structure"], c: 0 },
+    { q: "Administrative spaces belong to laboratory layout under:", a: ["Fire safety", "Zoning", "User comfort", "Lighting design"], c: 1 },
+    { q: "Specialized equipment areas are designed based on:", a: ["Function", "Furniture style", "Worker age", "Building color"], c: 0 },
+    { q: "The need to remove contaminants is mainly linked with:", a: ["Storage", "Ventilation and airflow", "User comfort", "Workbench design"], c: 1 },
+    { q: "Chemical-resistant workstations are important because laboratories may handle:", a: ["Clothing", "Chemicals", "Furniture only", "Paper only"], c: 1 },
+    { q: "Locked cabinets are especially needed for:", a: ["Office files", "Hazardous materials", "General furniture", "Books only"], c: 1 },
+    { q: "Cold storage is important for items that are:", a: ["Oversized", "Temperature-sensitive", "Fragile only", "Cheap"], c: 1 },
+    { q: "One benefit of proper lighting is improved:", a: ["Focus", "Waste generation", "Noise control", "Airflow speed"], c: 0 },
+    { q: "Fume hoods are particularly essential in labs handling:", a: ["Biohazards or chemicals", "Furniture only", "Administrative work only", "Dry office materials"], c: 0 },
+    { q: "Biosafety cabinets are essential when laboratories handle:", a: ["Office documents", "Chemicals or biohazards", "Only furniture", "Only lighting tools"], c: 1 },
+    { q: "Integrated waste systems are needed for radioactive waste because of:", a: ["Waste management design", "User comfort", "Administrative planning", "Decorative planning"], c: 0 },
+    { q: "Emergency exits should be:", a: ["Hidden", "Clear", "Locked", "Decorative only"], c: 1 },
+    { q: "Easy access to eyewash stations is part of:", a: ["Emergency protocols", "Equipment storage", "Lighting design", "Modularity"], c: 0 },
+    { q: "Containment levels are particularly important in labs handling:", a: ["Furniture", "Biological materials", "Administrative paperwork", "Lighting cables"], c: 1 },
+    { q: "High-stress laboratory environments require attention to:", a: ["User comfort", "Storage color", "Exterior signs only", "Marketing plans"], c: 0 },
+    { q: "Adjustable workstations are included in the text under:", a: ["User comfort", "Fire safety", "Zoning", "Waste disposal"], c: 0 },
+    { q: "Water conservation is considered under:", a: ["Safety protocols", "Environmental considerations", "Workbench design", "Administrative spaces"], c: 1 },
+    { q: "Low-flow fixtures are part of:", a: ["Sustainable design", "Emergency protocols", "Storage systems", "Fire safety"], c: 0 },
+    { q: "Energy-efficient equipment helps support:", a: ["Sustainable laboratory design", "More contamination", "Less safety", "More movement"], c: 0 },
+    { q: "A laboratory handling biological materials must consider:", a: ["Biosafety levels", "Furniture cost only", "Exterior walls only", "Window placement only"], c: 0 },
+    { q: "A key goal of laboratory design is to improve both safety and:", a: ["Decoration", "Efficiency", "Noise", "Clothing storage"], c: 1 },
+    { q: "The position of equipment and materials should be planned in a:", a: ["Random way", "Logical way", "Decorative way", "Temporary way"], c: 1 },
+    { q: "Flexibility helps laboratories respond to changes in:", a: ["Research focus", "Paint suppliers", "Parking rules", "Cafeteria menus"], c: 0 },
+    { q: "One reason labs should be modular is to support:", a: ["Easy reconfiguration", "Permanent fixed walls only", "Reduced safety", "Lower lighting only"], c: 0 },
+    { q: "Removing contaminants from laboratory air is the job of:", a: ["Storage systems", "Ventilation and airflow", "Workbenches", "Waste bins"], c: 1 },
+    { q: "The text describes workbenches as needing to be:", a: ["Soft and decorative", "Durable and chemical-resistant", "Disposable only", "Metallic only"], c: 1 },
+    { q: "Proper lighting mainly contributes to reducing:", a: ["Errors", "Cabinets", "Containment", "Water use"], c: 0 },
+    { q: "Chemical, biological, and radioactive waste should be handled through:", a: ["Open containers", "Integrated waste disposal systems", "General office bins", "Outdoor dumping"], c: 1 },
+    { q: "The phrase “support the type of testing and research activities planned” refers to:", a: ["Purpose and function", "User comfort only", "Furniture design only", "Administrative planning only"], c: 0 },
+    { q: "Cross-contamination is mainly reduced by proper:", a: ["Movement flow", "Paint choice", "Office planning", "Wall thickness"], c: 0 },
+    { q: "The laboratory should be designed not only for present needs but also for:", a: ["Future changes", "Decoration only", "Furniture replacement only", "Visitor comfort only"], c: 0 },
+    { q: "One environmental goal in laboratory design is conservation of:", a: ["Water and energy", "Paper and books", "Doors and windows", "Tables and chairs"], c: 0 },
+    { q: "Fire extinguishers are important because they are part of:", a: ["Fire safety", "Modularity", "Storage planning", "User comfort"], c: 0 },
+    { q: "The text emphasizes that design should protect users and:", a: ["Suppliers", "The environment", "Visitors only", "Furniture"], c: 1 },
+    { q: "Laboratories handling chemicals require special elements such as:", a: ["Fume hoods", "Dining tables", "Sports equipment", "Soundproof curtains"], c: 0 },
+    { q: "Emergency showers are included under:", a: ["Emergency protocols", "Storage", "Zoning", "Lighting"], c: 0 },
+    { q: "The adaptability of laboratory design is linked to future:", a: ["Advances in technology", "Paint brands", "Office furniture", "Building age only"], c: 0 },
+    { q: "One of the design principles specifically focused on environmental impact is:", a: ["Energy efficiency", "Zoning", "Lighting", "Storage"], c: 0 },
+    { q: "Overall, the text presents laboratory design as a balance of safety, efficiency, and:", a: ["Compliance with standards", "Entertainment", "Decoration", "Advertising"], c: 0 }
 ];
 
 let questionQueue = []; 
@@ -172,16 +270,43 @@ let score = 0;
 let wrongCount = 0;
 let answeredCount = 0;
 
+// عرض عدد الأسئلة المتاحة تلقائياً عند تحميل الصفحة
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("max-q-count").innerText = allQuestions.length;
+    document.getElementById("custom-count").max = allQuestions.length;
+});
+
+// دالة بدء الاختبار بالرقم المدخل
+function startCustomQuiz() {
+    let inputVal = document.getElementById("custom-count").value;
+    let count = parseInt(inputVal);
+    let errorMsg = document.getElementById("error-msg");
+
+    // التحقق من صحة الرقم
+    if (isNaN(count) || count < 1) {
+        errorMsg.innerText = "⚠️ يرجى إدخال رقم صحيح أكبر من 0";
+        errorMsg.style.display = "block";
+        return;
+    }
+    if (count > allQuestions.length) {
+        errorMsg.innerText = `⚠️ أقصى عدد متاح هو ${allQuestions.length} سؤال فقط!`;
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    // إذا كان الرقم صحيحاً، ابدأ الاختبار
+    errorMsg.style.display = "none";
+    startQuiz(count);
+}
+
 function startQuiz(count) {
     document.getElementById("setup-screen").style.display = "none";
     document.getElementById("game").style.display = "block";
     document.getElementById("stats-board").style.display = "grid";
 
     let shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-    let maxQuestions = Math.min(count, allQuestions.length);
-    
-    questionQueue = shuffled.slice(0, maxQuestions);
-    totalQuestionsCount = maxQuestions;
+    questionQueue = shuffled.slice(0, count);
+    totalQuestionsCount = count;
     
     score = 0;
     wrongCount = 0;
