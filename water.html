@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار جهاز التقطير - مخصص</title>
+    <title>اختبار جهاز التقطير - مخصص (ترتيب عشوائي)</title>
     <style>
         :root { 
-            --primary: #1abc9c; /* اللون الأخضر المميز لجهاز التقطير */
+            --primary: #1abc9c; 
             --bg: #121212; 
             --container-bg: #1e1e1e; 
             --text-main: #e0e0e0; 
@@ -24,14 +24,12 @@
         .header { border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; text-align: center; }
         .header h1 { font-size: 1.6rem; color: var(--primary); margin: 0; }
         
-        /* شاشة إعداد الاختبار */
         .setup-screen { text-align: center; padding: 20px 0; }
         .setup-screen h2 { color: var(--text-main); margin-bottom: 10px; font-weight: normal; }
         .setup-screen p { color: var(--text-sec); margin-bottom: 25px; font-size: 1rem; }
         
         .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
         
-        /* تصميم مربع الإدخال */
         .custom-input {
             background: var(--btn-bg);
             border: 2px solid var(--border-color);
@@ -46,10 +44,7 @@
             box-sizing: border-box;
             font-weight: bold;
         }
-        .custom-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(26, 188, 156, 0.2);
-        }
+        .custom-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(26, 188, 156, 0.2); }
 
         .btn-setup { background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
         .btn-setup:hover { background: #16a085; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4); }
@@ -102,10 +97,8 @@
         <p>الأسئلة المتاحة في بنك الأسئلة: <span id="max-q-count" style="color: var(--primary); font-weight: bold;">0</span> سؤال</p>
         
         <div class="setup-btns">
-            <input type="number" id="custom-count" class="custom-input" min="1" placeholder="مثال: 50" value="25">
-            
+            <input type="number" id="custom-count" class="custom-input" min="1" placeholder="مثال: 50" value="30">
             <button class="btn-setup" onclick="startCustomQuiz()">🚀 ابدأ الاختبار</button>
-            
             <p id="error-msg" style="color: var(--wrong); display: none; margin-top: 5px; font-weight: bold; font-size: 0.9rem;"></p>
         </div>
     </div>
@@ -119,8 +112,7 @@
 
     <div id="game">
         <div class="question-text" id="question">جاري تحميل السؤال...</div>
-        <div class="options-container" id="options">
-            </div>
+        <div class="options-container" id="options"></div>
         <div class="skip-container" id="skip-container">
             <button class="btn-skip" id="btn-skip" onclick="skipQuestion()">تخطي السؤال (تأجيل)</button>
         </div>
@@ -139,83 +131,108 @@
 </div>
 
 <script>
-// بنك أسئلة جهاز التقطير (70 سؤال)
+// بنك أسئلة جهاز التقطير المحدث (100 سؤال)
 const allQuestions = [
-    { q: "What is the main purpose of distillation?", a: ["To separate mixtures based on solubility", "To separate liquids based on boiling points", "To chemically react two substances", "To create a solid from a liquid"], c: 1 },
-    { q: "Which of the following is NOT a factor affecting successful distillation?", a: ["Difference in boiling points", "Vapour pressure differences", "Type of apparatus used", "Colour of the liquid"], c: 3 },
-    { q: "In a distillation process, the component with a lower boiling point will:", a: ["Evaporate first", "Remain in the boiling flask", "Solidify", "React chemically with other components"], c: 0 },
-    { q: "Which part of the water distiller is responsible for heating the water?", a: ["Condenser", "Immersion resistors", "Filter", "Control valve"], c: 1 },
-    { q: "What is the function of the condenser in a distillation apparatus?", a: ["To heat the liquid", "To convert vapour back to liquid", "To store distilled water", "To filter impurities"], c: 1 },
-    { q: "Which type of distillation uses a fractionating column?", a: ["Simple distillation", "Vacuum distillation", "Fractional distillation", "Steam distillation"], c: 2 },
-    { q: "What is the primary advantage of fractional distillation over simple distillation?", a: ["It is faster", "It consumes less energy", "It provides better separation of liquids", "It works only for pure liquids"], c: 2 },
-    { q: "What is the role of the activated carbon filter in a distiller?", a: ["To cool the vapour", "To remove impurities and odours", "To heat the water", "To increase pressure inside the distiller"], c: 1 },
-    { q: "Which of the following is NOT a disadvantage of fractional distillation?", a: ["It consumes more energy", "It takes longer to complete", "It requires a more complex setup", "It only works for solid-liquid mixtures"], c: 3 },
-    { q: "What is the main function of the vapour generator in a distillation system?", a: ["To cool the vapour", "To store distilled water", "To provide heat for boiling water", "To filter impurities"], c: 2 },
-    { q: "Why is a thermometer used in a distillation setup?", a: ["To measure the boiling point of the liquid", "To cool the condenser", "To increase the pressure", "To change the chemical composition of the liquid"], c: 0 },
-    { q: "What type of liquid is collected in the receiving flask in a distillation setup?", a: ["The liquid with the highest boiling point", "The liquid with the lowest boiling point", "The solid impurities", "The original mixture"], c: 1 },
-    { q: "What happens to the vapour pressure of a liquid as temperature increases?", a: ["It decreases", "It remains the same", "It increases", "It fluctuates randomly"], c: 2 },
-    { q: "What is the function of a control valve in a water distillation system?", a: ["To regulate the flow of water into the vapour generator", "To condense vapour into liquid", "To remove solid impurities", "To heat the liquid"], c: 0 },
-    { q: "What type of container should be used to store distilled water?", a: ["Metal containers", "Special plastic containers", "Glass containers only", "Any available container"], c: 1 },
-    { q: "Why does fractional distillation provide better separation of liquids than simple distillation?", a: ["It uses lower temperatures", "It includes a fractionating column for multiple condensation cycles", "It is performed under vacuum", "It adds impurities to the liquid"], c: 1 },
-    { q: "Which component helps regulate the quantity of water inside the vapour generator?", a: ["Filter", "Water level device", "Control valve", "Condenser"], c: 1 },
-    { q: "Which type of distillation is best for separating complex mixtures with small boiling point differences?", a: ["Simple distillation", "Fractional distillation", "Vacuum distillation", "Steam distillation"], c: 1 },
-    { q: "What happens to the more volatile liquid in a distillation process?", a: ["It solidifies", "It evaporates first", "It remains in the boiling flask", "It mixes with impurities"], c: 1 },
-    { q: "Why is cooling water constantly passed through the condenser?", a: ["To maintain low pressure", "To increase boiling point", "To convert vapour back into liquid", "To remove impurities"], c: 2 },
-    { q: "What does a hydraulic connection do in a water distillation system?", a: ["It filters out contaminants", "It supplies water to the vapour generator", "It controls boiling temperature", "It collects distilled water"], c: 1 },
-    { q: "Which of the following is NOT a benefit of simple distillation?", a: ["Simpler setup", "Faster process", "Better separation of components", "Lower energy consumption"], c: 2 },
-    { q: "In fractional distillation, what do the glass beads in the fractionating column do?", a: ["Absorb impurities", "Increase condensation and re-evaporation", "Act as a filter", "Provide heat to the mixture"], c: 1 },
-    { q: "What is the main difference between simple and fractional distillation?", a: ["Fractional distillation has a fractionating column", "Simple distillation is more energy-intensive", "Simple distillation provides better separation", "Fractional distillation is only used for solids"], c: 0 },
-    { q: "What is the final product of the distillation process?", a: ["Impure water", "Distilled water", "Vapour", "Solids"], c: 1 },
-    { q: "Distillation is a process of:", a: ["Filtration", "Separation by heating and condensation", "Freezing", "Grinding"], c: 1 },
-    { q: "Successful distillation mainly depends on:", a: ["Color", "Density", "Difference in boiling points", "Volume"], c: 2 },
-    { q: "The more volatile liquid is the one that:", a: ["Has a higher boiling point", "Has a lower boiling point", "Has higher density", "Has lighter color"], c: 1 },
-    { q: "Distillation is mainly used for:", a: ["Purifying liquids", "Measuring pressure", "Dissolving salts", "Sterilizing tools"], c: 0 },
-    { q: "The boiling point of a pure liquid is:", a: ["Variable", "Constant", "Always low", "Unknown"], c: 1 },
-    { q: "The device that cools vapor is called:", a: ["Flask", "Column", "Condenser", "Valve"], c: 2 },
-    { q: "In simple distillation, the boiling point difference should be:", a: ["Very small", "Less than 10°C", "Greater than 70°C", "Zero"], c: 2 },
-    { q: "The fractionating column is used in:", a: ["Simple distillation", "Fractional distillation", "Filtration", "Evaporation only"], c: 1 },
-    { q: "The function of immersion resistors is:", a: ["Cooling", "Heating", "Measuring", "Filtering"], c: 1 },
-    { q: "Distilled water should be stored in:", a: ["Metal containers", "Open glass containers", "Special plastic containers", "Wooden containers"], c: 2 },
-    { q: "Vapor changes into liquid during:", a: ["Evaporation", "Condensation", "Melting", "Freezing"], c: 1 },
-    { q: "Better separation of close boiling liquids is achieved by:", a: ["Simple distillation", "Fractional distillation", "Filtration", "Evaporation"], c: 1 },
-    { q: "Glass beads in the column increase:", a: ["Color", "Pressure", "Separation efficiency", "Volume"], c: 2 },
-    { q: "Simple distillation is characterized by being:", a: ["Complex", "Energy consuming", "Faster", "Always more accurate"], c: 2 },
-    { q: "One disadvantage of fractional distillation is:", a: ["Poor separation", "Faster process", "Higher energy consumption", "No column required"], c: 2 },
-    { q: "Water in the boiling tank turns into vapor when:", a: ["Temperature decreases", "It reaches its boiling point", "Pressure is zero", "It freezes"], c: 1 },
-    { q: "The function of the control valve is to:", a: ["Cool", "Regulate water flow", "Measure temperature", "Filter"], c: 1 },
-    { q: "Distillation depends on differences in:", a: ["Color", "Taste", "Vapor pressure", "Shape"], c: 2 },
-    { q: "Fractional distillation includes a:", a: ["Condenser only", "Fractionating column", "Filter only", "Resistor only"], c: 1 },
-    { q: "The activated carbon filter removes:", a: ["Heat", "Impurities and odors", "Pressure", "Vapor"], c: 1 },
-    { q: "The part that holds water before heating is the:", a: ["Condenser", "Boiling tank", "Column", "Filter"], c: 1 },
-    { q: "The less volatile liquid:", a: ["Boils first", "Boils at higher temperature", "Evaporates faster", "Does not evaporate"], c: 1 },
-    { q: "Increasing the number of theoretical plates will:", a: ["Decrease separation", "Improve separation", "Stop distillation", "Reduce time"], c: 1 },
-    { q: "Distillation is used in laboratories for:", a: ["Grinding", "Separation and purification", "Weight measurement", "Melting"], c: 1 },
-    { q: "The main difference between the two types is the presence of:", a: ["Flask", "Condenser", "Fractionating column", "Valve"], c: 2 },
-    { q: "Simple distillation is suitable for:", a: ["Complex mixtures", "Small boiling point difference", "Large boiling point difference", "Solid materials"], c: 2 },
-    { q: "Cooling water flows inside the:", a: ["Column", "Condenser", "Tank", "Filter"], c: 1 },
-    { q: "Higher energy consumption in fractional distillation is due to:", a: ["Cooling", "Repeated evaporation", "Filtration", "Lower temperature"], c: 1 },
-    { q: "Boiling point depends on:", a: ["Pressure", "Color", "Shape", "Length"], c: 0 },
-    { q: "The goal of distillation is to:", a: ["Change color", "Separate components", "Increase mass", "Reduce volume"], c: 1 },
-    { q: "Distillation separates liquids based on:", a: ["Density", "Boiling point", "Color", "Mass"], c: 1 },
-    { q: "A pure liquid boils at a:", a: ["Variable temperature", "Constant temperature", "Very low temperature", "Very high temperature"], c: 1 },
-    { q: "Fractional distillation is best for:", a: ["Pure liquids only", "Complex mixtures", "Solid materials", "Gases"], c: 1 },
-    { q: "Simple distillation has less:", a: ["Time", "Heat", "Separation efficiency", "All of the above"], c: 3 },
-    { q: "When vapor cools, it undergoes:", a: ["Evaporation", "Condensation", "Melting", "Combustion"], c: 1 },
-    { q: "The distilled water container must be:", a: ["Contaminated", "Open", "Special and insulated", "Metal"], c: 2 },
-    { q: "The more complex apparatus is:", a: ["Simple distillation", "Fractional distillation", "Both", "None"], c: 1 },
-    { q: "The type of distillation used depends on:", a: ["Color", "Boiling point difference", "Taste", "Shape"], c: 1 },
-    { q: "When boiling point difference is large, we use:", a: ["Fractional", "Simple", "None", "Filtration"], c: 1 },
-    { q: "Repeated condensation and evaporation occur in the:", a: ["Condenser", "Column", "Tank", "Filter"], c: 1 },
-    { q: "Vapor pressure increases when:", a: ["Temperature decreases", "Temperature increases", "Temperature is constant", "Freezing occurs"], c: 1 },
-    { q: "Simple distillation is not suitable for:", a: ["Large boiling difference", "Pure liquids", "Small boiling difference", "Solid impurities"], c: 2 },
-    { q: "The column improves separation because it provides:", a: ["Cooling", "Additional condensation surfaces", "Direct heating", "Filtration"], c: 1 },
-    { q: "Distilled water is used in:", a: ["Medical laboratory analysis", "Drinking only", "Cooking", "Fuel"], c: 0 },
-    { q: "The main principle of distillation is:", a: ["Heating then condensation", "Freezing", "Grinding", "Mixing"], c: 0 },
-    { q: "Distillation is most useful when components have different:", a: ["Pressure", "Boiling points", "Weights", "Densities"], c: 1 },
-    { q: "Device which allows flow of water towards the generator to be regulated:", a: ["Control Valve", "Hydraulic connection", "Safety Valve", "Vapor Generator"], c: 0 },
-    { q: "Distilled water must be stored in special plastic containers to avoid:", a: ["Oxidation", "Evaporation", "Inflammation", "Ionic contamination"], c: 3 },
-    { q: "Distillation separating complex mixtures with smaller boiling differences:", a: ["Fractional", "Complex", "Simple", "Mixture"], c: 0 },
-    { q: "Fractional distillation is essentially the same as simple EXCEPT for the:", a: ["Condenser", "Boiling flask", "Fractionating column", "Thermometer"], c: 2 }
+    { q: "What is distillation primarily described as?", a: ["A filtration process", "A separation process using heating and condensation", "A crystallization process", "A centrifugation process"], c: 1 },
+    { q: "Distillation involves first heating a liquid to its:", a: ["Freezing point", "Melting point", "Boiling point", "Sublimation point"], c: 2 },
+    { q: "After heating, the vapour is transferred to:", a: ["A burner", "A different portion of the apparatus", "A balance", "A beaker of ice"], c: 1 },
+    { q: "The vapour is then:", a: ["Filtered and dried", "Condensed and collected", "Neutralized and titrated", "Frozen and weighed"], c: 1 },
+    { q: "Distillation is useful for separating mixtures of liquids when components have different:", a: ["Colors", "Densities", "Boiling points", "Volumes"], c: 2 },
+    { q: "Chemically, distillation is the principal method for:", a: ["Measuring pH", "Purifying liquids", "Producing solids", "Identifying metals"], c: 1 },
+    { q: "Successful distillation depends on the difference in boiling points and therefore difference in:", a: ["Viscosity", "Vapour pressures", "Surface tension", "Electrical conductivity"], c: 1 },
+    { q: "Successful distillation also depends on the:", a: ["Color of the flask", "Type of apparatus used", "Shape of the beaker", "Brand of thermometer"], c: 1 },
+    { q: "Successful distillation also depends on the:", a: ["Care exercised by the experimentalist", "Color of cooling water", "Size of labels", "Room lighting"], c: 0 },
+    { q: "Distillation works by exploiting different:", a: ["Densities of solids", "Boiling temperatures of liquids", "Magnetism of liquids", "pH values"], c: 1 },
+    { q: "To separate liquids by distillation, you first heat them in a:", a: ["Test tube", "Flask", "Petri dish", "Funnel"], c: 1 },
+    { q: "The more volatile liquid is the one with the:", a: ["Higher boiling point", "Lower boiling point", "Higher density", "Lower viscosity"], c: 1 },
+    { q: "Typically, the more volatile liquid will:", a: ["Freeze first", "Evaporate first", "Condense first", "Crystallize first"], c: 1 },
+    { q: "The vapor passes into a:", a: ["Drying oven", "Condensing column", "Balance chamber", "Separatory funnel"], c: 1 },
+    { q: "In the condensing column, the vapor reverts into a liquid by:", a: ["Subliming", "Condensing on cool glass", "Reacting with air", "Absorbing light"], c: 1 },
+    { q: "After condensing, it trickles into a:", a: ["Collection flask", "Burette", "Pipette", "Crucible"], c: 0 },
+    { q: "Heating further causes the less volatile liquids to:", a: ["Distill at lower temperatures", "Distill at higher temperatures", "Stop evaporating", "Become solids immediately"], c: 1 },
+    { q: "The two main kinds of distillation mentioned are:", a: ["Vacuum and steam", "Simple and fractional", "Chemical and physical", "Batch and continuous only"], c: 1 },
+    { q: "A pure liquid has a constant boiling point as long as liquid and vapour are in:", a: ["Turbulence", "Equilibrium", "Darkness", "Motionless air"], c: 1 },
+    { q: "In simple distillation of a pure substance, as temperature rises, vapour pressure:", a: ["Decreases", "Increases", "Stays constant", "Disappears"], c: 1 },
+    { q: "As vapour expands, it passes out of the heated portion until it contacts the:", a: ["Hot plate", "Cold surface of the water-cooled condenser", "Rubber stopper", "Measuring cylinder"], c: 1 },
+    { q: "When cooled, the vapour:", a: ["Turns into a solid", "Condenses", "Becomes plasma", "Explodes"], c: 1 },
+    { q: "After condensation, the liquid passes down the condenser into the:", a: ["Receiver", "Burner", "Filter paper", "Clamp"], c: 0 },
+    { q: "A water distiller consists of components shown in:", a: ["Figure 3", "Figure 1", "Figure 2 only", "No figure is referenced"], c: 1 },
+    { q: "The vapour generator is also called the:", a: ["Condenser", "Boiling tank", "Filter", "Receiver adapter"], c: 1 },
+    { q: "The vapour generator is the container where the water to be distilled is:", a: ["Frozen", "Stored", "Colored", "Neutralized"], c: 1 },
+    { q: "The water level device allows the quantity of water to be regulated inside the:", a: ["Condenser", "Vapour generator", "Distilled water container", "Thermometer bulb"], c: 1 },
+    { q: "The control valve regulates the flow of water towards the:", a: ["Condenser", "Vapour generator tank", "Distilled water container", "Activated carbon filter"], c: 1 },
+    { q: "The control valve can be described as:", a: ["Optical", "Mechanical or electromechanical", "Purely chemical", "Only plastic"], c: 1 },
+    { q: "The hydraulic connection is the network that supplies water in liquid phase to the:", a: ["Filter", "Vapour generator tank", "Collection flask", "Thermometer adapter"], c: 1 },
+    { q: "Water in liquid phase refers to water inside the:", a: ["Condenser", "Vapour generator tank", "Distilled water container", "Fractionating column"], c: 1 },
+    { q: "Water in the vapour generator tank receives thermal energy from the:", a: ["Glass beads", "Immersion resistors", "Thermometer", "Rubber tubing only"], c: 1 },
+    { q: "Water is converted to vapour when required temperature and pressure conditions are:", a: ["Ignored", "Met", "Removed", "Lowered to zero"], c: 1 },
+    { q: "Immersion resistors generate heat when an electrical current:", a: ["Stops completely", "Circulates through them", "Is converted into light only", "Is reflected by glass beads"], c: 1 },
+    { q: "The refrigeration water outlet carries the water used for:", a: ["Mixing chemicals", "Condensing the water vapour", "Heating the boiling flask", "Measuring pH"], c: 1 },
+    { q: "Refrigeration water removes thermal energy from vapour by:", a: ["Heating", "Cooling", "Ionizing", "Filtering"], c: 1 },
+    { q: "The condenser is the device in which vapour:", a: ["Gains thermal energy", "Loses thermal energy and returns to liquid", "Turns into gas permanently", "Becomes solid directly"], c: 1 },
+    { q: "Distillers have activated carbon filters located at the exit of the:", a: ["Thermometer", "Condenser or collector", "Boiling flask only", "Fractionating column only"], c: 1 },
+    { q: "Activated carbon filters eliminate:", a: ["Metals only", "Flavours or particles", "Water entirely", "Heat completely"], c: 1 },
+    { q: "The distilled water container is where the fluid completing the distillation process is:", a: ["Heated", "Collected", "Evaporated again", "Burned"], c: 1 },
+    { q: "Distilled water must be stored in special plastic containers to avoid:", a: ["Temperature change", "Ionic contamination", "Evaporation", "Light exposure"], c: 1 },
+    { q: "The text states there are two types of distillation:", a: ["Steam and vacuum", "Simple and fractional", "Flash and azeotropic", "Destructive and constructive"], c: 1 },
+    { q: "In a simple distillation setup, the apparatus includes a:", a: ["Separatory funnel", "Boiling flask (round-bottom flask)", "Centrifuge tube", "Mortar and pestle"], c: 1 },
+    { q: "The boiling flask is attached to an adapter holding a:", a: ["pH meter", "Thermometer", "Stopwatch", "Spectrometer"], c: 1 },
+    { q: "The thermometer is used to determine the:", a: ["Density of the liquid", "Boiling temperature of the liquid", "Mass of the flask", "Color intensity"], c: 1 },
+    { q: "The adapter connects to a:", a: ["Balance", "Condenser", "Sieve", "Magnetic stirrer only"], c: 1 },
+    { q: "In the condenser, cold water is constantly:", a: ["Removed and discarded before entry", "Passed through", "Turned into steam immediately", "Mixed with distillate"], c: 1 },
+    { q: "The condenser leads into a collection flask for the:", a: ["Unpurified liquid", "Purified liquid", "Solid residue only", "Gas mixture only"], c: 1 },
+    { q: "Fractional distillation is like simple distillation except that a ___ is placed between boiling flask and condenser.", a: ["Filter paper", "Fractionating column", "Beaker", "Clamp"], c: 1 },
+    { q: "The fractionating column is usually filled with:", a: ["Sand only", "Glass or plastic beads", "Cotton wool only", "Metal powder"], c: 1 },
+    { q: "The beads improve the separation between liquids being:", a: ["Mixed", "Distilled", "Frozen", "Neutralized"], c: 1 },
+    { q: "Fractional distillation gives better separation because beads provide:", a: ["Vacuum chambers", "Theoretical plates", "Strong magnets", "Extra burners"], c: 1 },
+    { q: "On theoretical plates, the refluxing liquid can:", a: ["Only freeze", "Condense, re-evaporate, and condense again", "Only react chemically", "Only turn into solid"], c: 1 },
+    { q: "This repeated condense/re-evaporate action essentially distills the compound:", a: ["Once only", "Over and over", "Not at all", "Only at room temperature"], c: 1 },
+    { q: "In a fractionating column, the more volatile liquids tend to push towards the:", a: ["Bottom", "Top", "Middle only", "Outside of the column"], c: 1 },
+    { q: "In a fractionating column, the more boiling (less volatile) liquids tend to stay towards the:", a: ["Top", "Bottom", "Outside of condenser", "Thermometer bulb"], c: 1 },
+    { q: "Adding more theoretical plates generally makes distillation:", a: ["Shorter and colder", "Take longer", "Impossible", "Independent of energy"], c: 1 },
+    { q: "Adding more theoretical plates also generally requires:", a: ["Less energy to re-evaporate liquid", "More energy to re-evaporate liquid", "No heating at all", "Only sunlight"], c: 1 },
+    { q: "The text notes energy cost is more of a concern in:", a: ["Academic lab distillations", "Industrial distillations", "Household cooking", "Measuring exercises"], c: 1 },
+    { q: "The comparison table lists an advantage of simple distillation as:", a: ["Much better separation than fractional", "Simpler setup than fractional", "Requires more energy", "Longer distillation time"], c: 1 },
+    { q: "Another advantage of simple distillation is:", a: ["Faster distillation time", "Better theoretical plates", "Works with small boiling point differences", "Needs beads always"], c: 0 },
+    { q: "Another advantage of simple distillation is that it:", a: ["Consumes more energy", "Consumes less energy", "Requires vacuum", "Requires multiple columns"], c: 1 },
+    { q: "An advantage of fractional distillation is:", a: ["Poor separation", "Much better separation between liquids than simple distillation", "Always faster", "No energy needed"], c: 1 },
+    { q: "Another advantage of fractional distillation is it can more readily purify:", a: ["Only single pure liquids", "Complex mixtures", "Only solids", "Only gases"], c: 1 },
+    { q: "A disadvantage of simple distillation is it requires liquids to have:", a: ["No boiling point difference", "Large boiling point differences (>70°C)", "Identical vapour pressures", "Very low melting points"], c: 1 },
+    { q: "Another disadvantage of simple distillation is it:", a: ["Gives poorer separation than fractional distillation", "Gives better separation than fractional distillation", "Needs beads", "Needs industrial columns"], c: 0 },
+    { q: "The table states simple distillation only works well with relatively:", a: ["Dirty mixtures", "Pure samples", "Solid-only mixtures", "Gas-only mixtures"], c: 1 },
+    { q: "A disadvantage of fractional distillation is a:", a: ["Simpler setup than simple", "More complicated setup than simple distillation", "Lower separation power", "No condenser needed"], c: 1 },
+    { q: "Another disadvantage of fractional distillation is it:", a: ["Takes longer for liquids to distill", "Always finishes instantly", "Elimates the need for heating", "Cannot separate liquids"], c: 0 },
+    { q: "Another disadvantage of fractional distillation is it:", a: ["Consumes less energy than simple distillation", "Consumes more energy than simple distillation", "Uses no energy", "Removes need for water cooling"], c: 1 },
+    { q: "Simple distillation is best used for separating relatively pure liquids with:", a: ["Smaller boiling point separations", "Large boiling differences", "No boiling differences", "Identical densities only"], c: 1 },
+    { q: "Simple distillation is also best used for liquids with:", a: ["Only gas impurities", "Solid impurities", "Only color impurities", "Only magnetic impurities"], c: 1 },
+    { q: "Fractional distillation is best used for separating:", a: ["Complex mixtures of liquids", "Single pure liquids only", "Solids from solids", "Metals from salts"], c: 0 },
+    { q: "Fractional distillation is best used when boiling point separations are:", a: ["Very large only", "Smaller", "Infinite", "Not relevant"], c: 1 },
+    { q: "Distillation technique includes transferring vapour and then:", a: ["Burning it", "Condensing it", "Filtering it directly", "Freezing it in the flask"], c: 1 },
+    { q: "The collected condensed liquid is called the:", a: ["Residue", "Condensate", "Reactant", "Catalyst"], c: 1 },
+    { q: "The condensed liquid is collected in another:", a: ["Container", "Burner", "Stirrer", "Thermometer"], c: 0 },
+    { q: "The text says distillation is one of the most useful techniques for separating:", a: ["A mixture of solids", "A mixture of liquids", "A mixture of metals", "A mixture of powders"], c: 1 },
+    { q: "Distillation depends on differences in vapour pressures because vapour pressure relates to:", a: ["Boiling behaviour described in the text", "Color of the liquid", "Mass of glassware", "Labeling style"], c: 0 },
+    { q: "The more volatile liquid typically distills at:", a: ["Higher temperatures", "Lower temperatures", "Any random temperature", "Only at 0°C"], c: 1 },
+    { q: "The less volatile liquids distill at:", a: ["Lower temperatures", "Higher temperatures", "Only at freezing point", "Only without condenser"], c: 1 },
+    { q: "In a pure liquid distillation, vapour passes out of the heated portion until it contacts a:", a: ["Hot metal surface", "Cold surface of a water-cooled condenser", "Dry paper surface", "Warm plastic surface"], c: 1 },
+    { q: "In the condenser, vapour is cooled and then:", a: ["Turns into a different chemical", "Condenses", "Becomes solid metal", "Explodes"], c: 1 },
+    { q: "The distillate flows down the condenser into the:", a: ["Receiver", "Boiling flask", "Fractionating column", "Water inlet"], c: 0 },
+    { q: "Component (7) in the water distiller list is the:", a: ["Filter", "Refrigeration water outlet", "Water level", "Vapour generator"], c: 3 },
+    { q: "Component (8) in the water distiller list is the:", a: ["Condenser", "Control valve", "Immersion resistor", "Distilled water container"], c: 0 },
+    { q: "Component (9) in the water distiller list is the:", a: ["Filter", "Hydraulic connection", "Vapour generator", "Water level"], c: 0 },
+    { q: "Component (10) in the water distiller list is the:", a: ["Thermometer adapter", "Distilled water container", "Glass bead column", "Refrigeration outlet"], c: 1 },
+    { q: "The vapour generator (boiling tank) stores:", a: ["Distilled water only", "Water to be distilled", "Activated carbon", "Glass beads"], c: 1 },
+    { q: "The water level device allows regulation of:", a: ["Temperature only", "Quantity of water", "Colour of vapour", "Shape of condenser"], c: 1 },
+    { q: "The control valve regulates:", a: ["Electrical current", "Flow of water towards the vapour generator tank", "Glass bead size", "Condenser length"], c: 1 },
+    { q: "The hydraulic connection supplies water in:", a: ["Solid phase", "Liquid phase", "Plasma phase", "Crystal phase"], c: 1 },
+    { q: "The immersion resistors generate heat due to:", a: ["Mechanical friction", "Electrical current circulation", "Sunlight absorption", "Chemical reaction with water"], c: 1 },
+    { q: "Refrigeration water is used to:", a: ["Heat the vapour", "Condense vapour by removing thermal energy", "Add ions to water", "Make beads float"], c: 1 },
+    { q: "Activated carbon filters are used to eliminate:", a: ["Boiling points", "Flavours or particles", "Condensers", "Vapour pressure differences"], c: 1 },
+    { q: "Distilled water must be stored in special plastic containers to avoid:", a: ["Becoming colder", "Ionic contamination", "Becoming heavier", "Evaporating instantly"], c: 1 },
+    { q: "In simple distillation, the apparatus includes an adapter holding a:", a: ["Stir bar", "Thermometer", "Filter pad", "Bead pack"], c: 1 },
+    { q: "In fractional distillation, placing a fractionating column between boiling flask and condenser improves separation by:", a: ["Removing the need for cooling water", "Providing theoretical plates for repeated condensation and evaporation", "Eliminating boiling point differences", "Turning vapour into solids"], c: 1 },
+    { q: "The table indicates simple distillation gives:", a: ["Better separation than fractional", "Poorer separation than fractional", "Identical separation always", "No separation at all"], c: 1 },
+    { q: "The table indicates fractional distillation is best for mixtures with:", a: ["Large boiling point differences (>70°C) only", "Smaller boiling point separations and more complex mixtures", "Only solid impurities", "Only pure single liquids"], c: 1 }
 ];
 
 let questionQueue = []; 
@@ -231,13 +248,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("custom-count").max = allQuestions.length;
 });
 
-// دالة بدء الاختبار بالرقم المدخل
 function startCustomQuiz() {
     let inputVal = document.getElementById("custom-count").value;
     let count = parseInt(inputVal);
     let errorMsg = document.getElementById("error-msg");
 
-    // التحقق من صحة الرقم
     if (isNaN(count) || count < 1) {
         errorMsg.innerText = "⚠️ يرجى إدخال رقم صحيح أكبر من 0";
         errorMsg.style.display = "block";
@@ -249,7 +264,6 @@ function startCustomQuiz() {
         return;
     }
 
-    // إذا كان الرقم صحيحاً، ابدأ الاختبار
     errorMsg.style.display = "none";
     startQuiz(count);
 }
@@ -294,21 +308,20 @@ function nextQuestion() {
     const optionsBox = document.getElementById("options");
     optionsBox.innerHTML = "";
     
-    // --- ميزة خلط الخيارات العشوائي (Shuffling) ---
-    // نقوم بربط كل خيار بمعلومة (هل هو صحيح أم لا) قبل الخلط
+    // ربط الخيارات بمعلومة الصحة والخطأ لضمان العشوائية
     let shuffledOptions = currentQuestion.a.map((option, index) => {
         return { text: option, isCorrect: (index === currentQuestion.c) };
     });
     
-    // خلط أماكن الخيارات عشوائياً
+    // خلط الأماكن عشوائياً
     shuffledOptions.sort(() => Math.random() - 0.5); 
-    // ----------------------------------------------
 
     shuffledOptions.forEach((opt) => {
         const btn = document.createElement("button");
         btn.innerText = opt.text;
         btn.classList.add("option-btn");
-        // نحفظ داخل الزر معلومة مخفية إذا كان هو الصح أم الخطأ
+        
+        // إخفاء إشارة تدل على صحة الزر
         btn.dataset.correct = opt.isCorrect; 
         
         btn.onclick = () => checkAnswer(opt.isCorrect, btn);
@@ -324,14 +337,12 @@ function checkAnswer(isCorrect, btn) {
     allBtns.forEach(b => b.disabled = true);
     
     if (isCorrect) {
-        // إذا كانت الإجابة صحيحة
         btn.classList.add("correct");
         score++;
     } else {
-        // إذا كانت خاطئة
         btn.classList.add("incorrect");
         wrongCount++;
-        // يبحث النظام عن الزر الصحيح (الذي تم تغيير مكانه) ويلونه بالأخضر
+        // البحث عن الزر الصحيح وتلوينه في حال أخطأ الطالب
         allBtns.forEach(b => {
             if (b.dataset.correct === "true") {
                 b.classList.add("correct");
