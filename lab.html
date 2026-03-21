@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار تصميم المختبرات - مخصص</title>
+    <title>اختبار تصميم المختبرات - (ترتيب عشوائي)</title>
     <style>
         :root { 
             --primary: #3498db; 
@@ -24,14 +24,12 @@
         .header { border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; text-align: center; }
         .header h1 { font-size: 1.6rem; color: var(--primary); margin: 0; }
         
-        /* شاشة إعداد الاختبار الجديدة */
         .setup-screen { text-align: center; padding: 20px 0; }
         .setup-screen h2 { color: var(--text-main); margin-bottom: 10px; font-weight: normal; }
         .setup-screen p { color: var(--text-sec); margin-bottom: 25px; font-size: 1rem; }
         
         .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
         
-        /* تصميم مربع الإدخال */
         .custom-input {
             background: var(--btn-bg);
             border: 2px solid var(--border-color);
@@ -46,10 +44,7 @@
             box-sizing: border-box;
             font-weight: bold;
         }
-        .custom-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(52, 152, 219, 0.2);
-        }
+        .custom-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(52, 152, 219, 0.2); }
 
         .btn-setup { background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
         .btn-setup:hover { background: #2980b9; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4); }
@@ -59,7 +54,7 @@
         .stat-cor { border-bottom: 3px solid var(--right); color: var(--right); }
         .stat-wro { border-bottom: 3px solid var(--wrong); color: var(--wrong); }
         .stat-rem { border-bottom: 3px solid var(--warning); color: var(--warning); }
-        .stat-ans { border-bottom: 3px solid #3498db; color: #3498db; }
+        .stat-ans { border-bottom: 3px solid var(--primary); color: var(--primary); }
         .stat-box span { display: block; font-size: 1.4rem; margin-top: 5px; color: var(--text-main); }
 
         .question-text { font-size: 1.2rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.6; font-weight: 600; text-align: left; direction: ltr; }
@@ -103,9 +98,7 @@
         
         <div class="setup-btns">
             <input type="number" id="custom-count" class="custom-input" min="1" placeholder="مثال: 50" value="30">
-            
             <button class="btn-setup" onclick="startCustomQuiz()">🚀 ابدأ الاختبار</button>
-            
             <p id="error-msg" style="color: var(--wrong); display: none; margin-top: 5px; font-weight: bold; font-size: 0.9rem;"></p>
         </div>
     </div>
@@ -119,8 +112,7 @@
 
     <div id="game">
         <div class="question-text" id="question">جاري تحميل السؤال...</div>
-        <div class="options-container" id="options">
-            </div>
+        <div class="options-container" id="options"></div>
         <div class="skip-container" id="skip-container">
             <button class="btn-skip" id="btn-skip" onclick="skipQuestion()">تخطي السؤال (تأجيل)</button>
         </div>
@@ -130,7 +122,7 @@
         <h2>اكتمل الاختبار!</h2>
         <div class="score" id="final-score">0%</div>
         <p id="score-text"></p>
-        <button class="btn" style="background: var(--primary); color:#fff; margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem; padding: 12px 30px;" onclick="location.reload()">إعادة الاختبار</button>
+        <button class="btn" style="background: var(--primary); color:#121212; margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem; padding: 12px 30px;" onclick="location.reload()">إعادة الاختبار</button>
     </div>
 
     <div class="footer">
@@ -139,7 +131,7 @@
 </div>
 
 <script>
-// بنك الأسئلة الشامل (أسئلة تصميم المختبرات)
+// بنك أسئلة تصميم المختبرات (120 سؤال)
 const allQuestions = [
     { q: "Why is good laboratory design important?", a: ["Only to reduce construction costs", "To ensure safety, efficiency, and compliance with standards", "Only to improve building appearance", "To reduce the number of workers"], c: 1 },
     { q: "A well-planned laboratory should consider the specific scientific and operational needs of:", a: ["Only academic institutions", "Only industrial facilities", "The research or medical work conducted within it", "Only healthcare settings"], c: 2 },
@@ -270,19 +262,16 @@ let score = 0;
 let wrongCount = 0;
 let answeredCount = 0;
 
-// عرض عدد الأسئلة المتاحة تلقائياً عند تحميل الصفحة
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("max-q-count").innerText = allQuestions.length;
     document.getElementById("custom-count").max = allQuestions.length;
 });
 
-// دالة بدء الاختبار بالرقم المدخل
 function startCustomQuiz() {
     let inputVal = document.getElementById("custom-count").value;
     let count = parseInt(inputVal);
     let errorMsg = document.getElementById("error-msg");
 
-    // التحقق من صحة الرقم
     if (isNaN(count) || count < 1) {
         errorMsg.innerText = "⚠️ يرجى إدخال رقم صحيح أكبر من 0";
         errorMsg.style.display = "block";
@@ -294,7 +283,6 @@ function startCustomQuiz() {
         return;
     }
 
-    // إذا كان الرقم صحيحاً، ابدأ الاختبار
     errorMsg.style.display = "none";
     startQuiz(count);
 }
@@ -317,12 +305,10 @@ function startQuiz(count) {
 
 function updateStats() {
     let remaining = questionQueue.length + (currentQuestion ? 1 : 0);
-    
     document.getElementById("val-ans").innerText = answeredCount;
     document.getElementById("val-rem").innerText = remaining;
     document.getElementById("val-cor").innerText = score;
     document.getElementById("val-wro").innerText = wrongCount;
-
     document.getElementById("btn-skip").disabled = (questionQueue.length === 0);
 }
 
@@ -339,21 +325,17 @@ function nextQuestion() {
     const optionsBox = document.getElementById("options");
     optionsBox.innerHTML = "";
     
-    // --- ميزة خلط الخيارات العشوائي (Shuffling) ---
-    // نقوم بربط كل خيار بمعلومة (هل هو صحيح أم لا) قبل الخلط
+    // --- ميزة الترتيب العشوائي للخيارات ---
     let shuffledOptions = currentQuestion.a.map((option, index) => {
         return { text: option, isCorrect: (index === currentQuestion.c) };
     });
     
-    // خلط أماكن الخيارات عشوائياً
     shuffledOptions.sort(() => Math.random() - 0.5); 
-    // ----------------------------------------------
 
     shuffledOptions.forEach((opt) => {
         const btn = document.createElement("button");
         btn.innerText = opt.text;
         btn.classList.add("option-btn");
-        // نحفظ داخل الزر معلومة مخفية إذا كان هو الصح أم الخطأ
         btn.dataset.correct = opt.isCorrect; 
         
         btn.onclick = () => checkAnswer(opt.isCorrect, btn);
@@ -369,14 +351,11 @@ function checkAnswer(isCorrect, btn) {
     allBtns.forEach(b => b.disabled = true);
     
     if (isCorrect) {
-        // إذا كانت الإجابة صحيحة
         btn.classList.add("correct");
         score++;
     } else {
-        // إذا كانت خاطئة
         btn.classList.add("incorrect");
         wrongCount++;
-        // يبحث النظام عن الزر الصحيح (الذي تم تغيير مكانه) ويلونه بالأخضر
         allBtns.forEach(b => {
             if (b.dataset.correct === "true") {
                 b.classList.add("correct");
