@@ -30,20 +30,7 @@
         
         .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
         
-        .custom-input {
-            background: var(--btn-bg);
-            border: 2px solid var(--border-color);
-            color: var(--text-main);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.3rem;
-            text-align: center;
-            outline: none;
-            transition: 0.3s;
-            width: 100%;
-            box-sizing: border-box;
-            font-weight: bold;
-        }
+        .custom-input { background: var(--btn-bg); border: 2px solid var(--border-color); color: var(--text-main); padding: 15px; border-radius: 10px; font-size: 1.3rem; text-align: center; outline: none; transition: 0.3s; width: 100%; box-sizing: border-box; font-weight: bold; }
         .custom-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(155, 89, 182, 0.2); }
 
         .btn-setup { background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
@@ -130,110 +117,11 @@
     </div>
 </div>
 
+<script src="questions.js"></script>
+
 <script>
-// بنك أسئلة المجهر (100 سؤال)
-const allQuestions = [
-    {q: "What is a microscope mainly used for?", a: ["Measuring temperature", "Producing highly magnified images of small specimens", "Mixing chemicals", "Heating samples"], c: 1},
-    {q: "A microscope is described in the text as a:", a: ["Simple mechanical tool", "Precision instrument", "Chemical device", "Manual counter"], c: 1},
-    {q: "Which of the following is an optical subsystem of a microscope?", a: ["Stage", "Lens", "Base", "Arm"], c: 1},
-    {q: "The mechanical subsystem of a microscope controls the sample position in:", a: ["One dimension only", "Two dimensions only", "Three-dimensional space X, Y, Z", "Circular motion only"], c: 2},
-    {q: "Which subsystem includes transformers and light source?", a: ["Mechanical subsystem", "Electrical subsystem", "Optical subsystem", "Biological subsystem"], c: 1},
-    {q: "Which subsystem may include cameras and video?", a: ["Mechanical subsystem", "Electronic subsystem", "Optical subsystem", "Base subsystem"], c: 1},
-    {q: "A microscope is especially useful when objects are too small to be seen by the:", a: ["Camera", "Objective lens", "Naked eye", "Stage"], c: 2},
-    {q: "The word “microscope” comes partly from the Greek word “micros,” which means:", a: ["Bright", "Small", "Lens", "Eye"], c: 1},
-    {q: "Microscopy is defined as:", a: ["Repairing a microscope", "Investigation by a microscope", "Manufacturing lenses", "Measuring light intensity"], c: 1},
-    {q: "The eyepiece is located at the:", a: ["Base of the microscope", "Lower end of the stage", "Upper end of the microscope", "Side of the condenser"], c: 2},
-    {q: "The eyepiece consists of:", a: ["A single mirror", "A series of lenses mounted in a tube", "A metal plate", "A bulb filament"], c: 1},
-    {q: "The basic function of the eyepiece is to magnify the image formed by the:", a: ["Stage clips", "Objective lens", "Base", "Diaphragm"], c: 1},
-    {q: "The eyepiece magnifies the image a:", a: ["Third time", "First time", "Second time", "Fifth time"], c: 2},
-    {q: "The arm of the microscope is also called the:", a: ["Barrel", "Stand or limb", "Clip", "Tube plate"], c: 1},
-    {q: "The arm contains the:", a: ["Focus mechanism", "Light bulb only", "Stage clips only", "Filter disk only"], c: 0},
-    {q: "The arm supports the:", a: ["Stage and body/head", "Condenser only", "Diaphragm only", "Objective lens only"], c: 0},
-    {q: "The arm provides the microscope with:", a: ["Heat", "Color", "Rigidity", "Motion only"], c: 2},
-    {q: "Which type of arm has the arm and body as integral parts connected solidly to the base?", a: ["Pillar", "Boom", "Fixed", "Trinocular"], c: 2},
-    {q: "Which type of arm consists of a single post rising vertically from the base?", a: ["Fixed", "Boom", "Pillar", "Monocular"], c: 2},
-    {q: "In the pillar type arm, the microscope body can:", a: ["Only move left and right", "Rotate about the post and move up and down", "Only rotate downward", "Only remain fixed"], c: 1},
-    {q: "The boom arm is described as:", a: ["The most common arm", "A long boom type stand", "A short fixed stand", "A lens system"], c: 1},
-    {q: "The boom stand allows the microscope to be aligned in:", a: ["One fixed direction", "A wide variety of configurations", "Only vertical positions", "Only horizontal positions"], c: 1},
-    {q: "The least common type of arm is the:", a: ["Fixed arm", "Pillar arm", "Boom arm", "None of the above"], c: 2},
-    {q: "The stage is the platform:", a: ["Above the eyepiece", "Beneath the objectives", "Inside the base", "Behind the arm"], c: 1},
-    {q: "The stage is used to hold the:", a: ["Light source", "Slide or object", "Arm", "Power supply"], c: 1},
-    {q: "The surface of the stage is described as:", a: ["Rough and curved", "Smooth and flat", "Soft and flexible", "Transparent and thin"], c: 1},
-    {q: "The coarse adjustment is used to make:", a: ["Small changes in light", "Large changes in focus", "Small changes in color", "Large changes in stage size"], c: 1},
-    {q: "The fine adjustment is used to make:", a: ["Small adjustments of focus", "Large adjustments of focus", "Changes in magnification", "Changes in illumination color"], c: 0},
-    {q: "The base is the:", a: ["Upper support part", "Bottom support part", "Lens holder", "Image projector"], c: 1},
-    {q: "The base provides:", a: ["Balance and rigidity", "Color and brightness", "Magnification and contrast", "Rotation and illumination"], c: 0},
-    {q: "According to the text, the tube:", a: ["Holds the stage clips", "Reflects the light up to the viewer’s eyes", "Supports the base", "Contains the diaphragm"], c: 1},
-    {q: "The rotating object is also called the:", a: ["Barrel", "Nosepiece", "Limb", "Aperture"], c: 1},
-    {q: "The nosepiece is used to hold:", a: ["Stage clips", "Multiple objective lenses", "Only one eyepiece", "The diaphragm openings"], c: 1},
-    {q: "The purpose of the nosepiece is to allow:", a: ["Quick change of objective", "Quick removal of the base", "Quick focusing of the eyepiece", "Quick movement of the arm"], c: 0},
-    {q: "Objective lenses are the lenses closest to the:", a: ["Viewer’s eye", "Base", "Specimen", "Light switch"], c: 2},
-    {q: "The objective lenses are considered the most important part of the:", a: ["Stage", "Microscope", "Base", "Arm"], c: 1},
-    {q: "The basic function of the objective lens is to gather light passing through the:", a: ["Eyepiece", "Arm", "Specimen", "Base"], c: 2},
-    {q: "The objective lens then projects the image into the:", a: ["Stage", "Body of the microscope", "Base", "Light source"], c: 1},
-    {q: "Most quality microscopes use _____ for the objectives.", a: ["Plastic", "Rubber", "Glass", "Wood"], c: 2},
-    {q: "The first objective lens is usually the:", a: ["Medium power objective", "High power objective", "Low power objective", "Iris objective"], c: 2},
-    {q: "The low power objective usually has a magnification of:", a: ["4X", "10X", "43X", "100X"], c: 0},
-    {q: "The medium power objective usually has a magnification of:", a: ["4X", "10X", "43X", "400X"], c: 1},
-    {q: "The high power objective usually has a magnification of:", a: ["4X", "10X", "43X", "80X"], c: 2},
-    {q: "Stage clips are used to:", a: ["Keep the slide in place", "Adjust the light intensity", "Rotate the eyepiece", "Support the arm"], c: 0},
-    {q: "The condenser is located:", a: ["Above the eyepiece", "Within or below the stage", "Under the base only", "In the head only"], c: 1},
-    {q: "The condenser gathers light coming from the:", a: ["Arm", "Light source", "Eyepiece", "Nosepiece"], c: 1},
-    {q: "The condenser concentrates the light into a light cone onto the:", a: ["Base", "Specimen", "Arm", "Clip"], c: 1},
-    {q: "Some condensers can have accessories for:", a: ["Phase contrast and polarized light", "Heating samples", "Stage cleaning", "Measuring voltage"], c: 0},
-    {q: "The diaphragm is normally located:", a: ["Inside the eyepiece", "Under the stage", "On the arm", "In the base only"], c: 1},
-    {q: "The diaphragm adjusts the amount of:", a: ["Magnification", "Light passing into the slide or specimen", "Stage size", "Objective number"], c: 1},
-    {q: "Another name for the diaphragm is the:", a: ["Nosepiece diaphragm", "Sub-stage or aperture diaphragm", "Arm diaphragm", "Focus diaphragm"], c: 1},
-    {q: "There are _____ types of diaphragm mentioned in the text.", a: ["Two", "Three", "Four", "Five"], c: 0},
-    {q: "The simplest and least expensive diaphragm is the:", a: ["Iris diaphragm", "Disc diaphragm", "Polarized diaphragm", "Phase diaphragm"], c: 1},
-    {q: "The disc diaphragm contains:", a: ["A glass mirror", "A rotating disk with openings of different diameters", "A bulb filament", "A movable camera"], c: 1},
-    {q: "The openings in the disc diaphragm are used to:", a: ["Hold the specimen", "Limit the amount of light passing through", "Support the objective lens", "Change stage position"], c: 1},
-    {q: "The better and more expensive diaphragm is the:", a: ["Disc diaphragm", "Iris diaphragm", "LED diaphragm", "Fixed diaphragm"], c: 1},
-    {q: "The iris diaphragm has a:", a: ["Fixed diameter", "Continuously variable diameter", "Double lens", "Rotating stage"], c: 1},
-    {q: "The iris diaphragm is usually controlled by a:", a: ["Screw", "Lever", "Clip", "Tube"], c: 1},
-    {q: "The function of the iris diaphragm is to optimize:", a: ["Resolution, contrast, and sharpness", "Height, length, and width", "Voltage, power, and current", "Rotation, tilt, and balance"], c: 0},
-    {q: "The light source is used to illuminate the:", a: ["Arm", "Base", "Object or specimen", "Eyepiece"], c: 2},
-    {q: "The most common and least expensive illumination bulb is:", a: ["Halogen", "Tungsten", "Fluorescent", "LED"], c: 1},
-    {q: "Tungsten bulbs give off a:", a: ["Blue hue", "Yellowish hue", "Green hue", "Red hue"], c: 1},
-    {q: "Tungsten bulbs are typically:", a: ["5–10 watt", "15–20 watt", "40–60 watt", "80–100 watt"], c: 1},
-    {q: "The hottest light source for a microscope is generally:", a: ["Tungsten", "Halogen", "Fluorescent", "LED"], c: 1},
-    {q: "Halogen light is described as:", a: ["Dim and cool", "Bright, white, and concentrated", "Yellowish and weak", "Soft and blue"], c: 1},
-    {q: "Halogen lamps are more expensive than:", a: ["Fluorescent lamps", "LED lamps", "Tungsten lamps", "Ring lights"], c: 2},
-    {q: "The fluorescent lamp is:", a: ["Cool in temperature", "The hottest light source", "Always yellowish", "Battery operated only"], c: 0},
-    {q: "Fluorescent light is especially good for observing:", a: ["Metal surfaces only", "Live specimens", "Rocks only", "Coins only"], c: 1},
-    {q: "Fluorescent lamps are typically rated:", a: ["1–3 watt", "5–10 watt", "15–20 watt", "50–100 watt"], c: 1},
-    {q: "A fluorescent light attached to observe from above is called a:", a: ["Disk light", "Ring light", "Cone light", "Boom light"], c: 1},
-    {q: "LED stands for:", a: ["Lens Emitting Device", "Light Emitting Diode", "Low Energy Detector", "Light Expansion Display"], c: 1},
-    {q: "LED light sources provide bright light with:", a: ["Very high heat", "Moderate heat", "Virtually no heat", "No brightness"], c: 2},
-    {q: "LED systems are often battery operated, so they are:", a: ["Heavy", "Cordless", "Fixed to the wall", "More expensive than all others in the text"], c: 1},
-    {q: "The head of the microscope connects the eyepiece to the:", a: ["Stage", "Base", "Nosepiece or turret", "Condenser"], c: 2},
-    {q: "Some microscope heads allow tilting from 0° up to:", a: ["30°", "45°", "60°", "90°"], c: 2},
-    {q: "A microscope with a single eyepiece is called:", a: ["Binocular", "Trinocular", "Monocular", "Universal"], c: 2},
-    {q: "A microscope with two eyepieces is called:", a: ["Binocular", "Monocular", "Pillar", "Digital"], c: 0},
-    {q: "A trinocular microscope includes:", a: ["Only one eyepiece", "No viewing head", "A binocular head and an additional port", "Only a camera and no eyepieces"], c: 2},
-    {q: "Most microscopes are called light microscopes because they rely on:", a: ["Heat", "Sound", "Light", "Pressure"], c: 2},
-    {q: "Which of the following is listed as a category of microscope?", a: ["Hydraulic microscope", "Compound microscope", "Steam microscope", "Magnetic microscope"], c: 1},
-    {q: "The compound microscope is also referred to as a:", a: ["Dissecting microscope", "Biological or research microscope", "Metallurgical lamp", "Ring microscope"], c: 1},
-    {q: "The compound microscope is referred to as a:", a: ["Low power microscope", "High power microscope", "Thermal microscope", "Portable microscope"], c: 1},
-    {q: "The magnification range of a compound microscope is about:", a: ["10x to 80x", "40x to 1000x", "5x to 20x", "1000x to 5000x"], c: 1},
-    {q: "Some compound microscopes can go up to:", a: ["200x", "500x", "1500x or 2000x", "80x only"], c: 2},
-    {q: "Much serious work of a compound microscope is done at:", a: ["10x to 40x", "80x to 100x", "400x to 500x", "1000x to 2000x only"], c: 2},
-    {q: "The compound microscope has:", a: ["Two separate light paths", "A single light path through a series of lenses", "No objective lenses", "Only one magnifying lens"], c: 1},
-    {q: "The image in a compound microscope is seen as if it were about:", a: ["10 inches (250 mm) from the eye", "1 inch from the eye", "1 meter from the eye", "50 inches from the eye"], c: 0},
-    {q: "The image produced at the eye by a compound microscope is usually:", a: ["Three-dimensional and upright", "Two-dimensional, reversed, and upside down", "Colored and moving", "Enlarged but not reversed"], c: 1},
-    {q: "The most used light method in a compound microscope is:", a: ["Reflection from above", "Trans-illumination", "Side illumination only", "Infrared illumination"], c: 1},
-    {q: "Trans-illumination means light is projected from:", a: ["Above", "The side", "Below", "Behind the head"], c: 2},
-    {q: "At 400x magnification, a compound microscope can show detail at the:", a: ["Planetary level", "Cellular level", "Mechanical level only", "Surface level only"], c: 1},
-    {q: "Stereo microscopes are the _____ most common type of microscope.", a: ["First", "Second", "Third", "Least"], c: 1},
-    {q: "Stereo microscopes are also referred to as:", a: ["Research microscopes", "Dissection or inspection microscopes", "Electron beam microscopes", "Phase contrast microscopes only"], c: 1},
-    {q: "The stereo microscope is considered a:", a: ["High power microscope", "Low power microscope", "Digital microscope only", "Phase microscope only"], c: 1},
-    {q: "The magnification range of a stereo microscope is about:", a: ["10x to 80x", "40x to 1000x", "100x to 1500x", "500x to 2000x"], c: 0},
-    {q: "The most popular magnification range for stereo microscopes is:", a: ["1x to 5x", "10x to 40x", "100x to 500x", "500x to 1000x"], c: 1},
-    {q: "A stereo microscope produces a true:", a: ["2-D image", "Colored image only", "Stereo image", "Reversed image only"], c: 2},
-    {q: "A stereo microscope has:", a: ["One light path only", "Two separate light paths", "No light path", "Three light paths only"], c: 1},
-    {q: "The image produced by a stereo microscope is:", a: ["Two-dimensional", "Upside down", "Three-dimensional", "Invisible without a camera"], c: 2},
-    {q: "Most stereo microscopes have built-in illumination from:", a: ["Top only", "Bottom only", "Both top and bottom", "Neither top nor bottom"], c: 2}
-];
+// سحب أسئلة المجهر
+const allQuestions = typeof microscopeQuestions !== 'undefined' ? microscopeQuestions : [];
 
 let questionQueue = []; 
 let currentQuestion = null;
@@ -305,7 +193,6 @@ function nextQuestion() {
     const optionsBox = document.getElementById("options");
     optionsBox.innerHTML = "";
     
-    // ميزة الترتيب العشوائي للخيارات
     let shuffledOptions = currentQuestion.a.map((option, index) => {
         return { text: option, isCorrect: (index === currentQuestion.c) };
     });
@@ -317,7 +204,6 @@ function nextQuestion() {
         btn.innerText = opt.text;
         btn.classList.add("option-btn");
         btn.dataset.correct = opt.isCorrect; 
-        
         btn.onclick = () => checkAnswer(opt.isCorrect, btn);
         optionsBox.appendChild(btn);
     });
