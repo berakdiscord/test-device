@@ -14,9 +14,10 @@
         .quiz-card:hover { transform: translateY(-5px); }
         .quiz-card h2 { color: #d3dae0; margin-top: 0; font-size: 1.6em; direction: ltr; }
         .quiz-card p { color: #7f8c8d; margin-bottom: 25px; line-height: 1.6; }
-        .btn-active { display: inline-block; background-color: #3498db; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; transition: background 0.3s; }
+        .btn-active { display: inline-block; background-color: #3498db; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; transition: background 0.3s; border: none; cursor: pointer;}
         .btn-active:hover { background-color: #2980b9; }
-        .btn-disabled { display: inline-block; background-color: #95a5a6; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: not-allowed; opacity: 0.8;}
+        
+        .card-combined { border-top-color: #f1c40f; }
         .card-lab { border-top-color: #3498db; }
         .card-centrifuge { border-top-color: #e67e22; }
         .card-microscope { border-top-color: #9b59b6; }
@@ -29,39 +30,44 @@
         <h1>منصة الاختبارات للأجهزة المختبرية</h1>
         <p>اختر الاختبار المتاح من القائمة أدناه لتبدأ التقييم</p>
     </header>
+
     <div class="container">
-        
+
         <div class="quiz-card card-lab">
             <h2>Laboratory design</h2>
-            <p>اختبار شامل  خيارات متعددة لاختبار معلوماتك في تصميم المختبرات والسلامة المهنية.</p>
+            <p>اختبار شامل مكون من 120 سؤال لاختبار معلوماتك في تصميم المختبرات والسلامة المهنية.</p>
             <a href="lab.html" class="btn-active">ابدأ الاختبار الآن</a>
         </div>
 
         <div class="quiz-card card-centrifuge">
             <h2>Centrifuge</h2>
-            <p>اختبار قادم يغطي مبدأ عمل جهاز الطرد المركزي، أنواعه، وقواعد الاستخدام الآمن في المختبر.</p>
+            <p>اختبار يغطي مبدأ عمل جهاز الطرد المركزي، أنواعه، وقواعد الاستخدام الآمن.</p>
             <a href="centrifuge.html" class="btn-active">ابدأ الاختبار الآن</a>
         </div>
         
         <div class="quiz-card card-microscope">
             <h2>Microscope</h2>
-            <p> أسئلة متخصصة في أجزاء المجهر الضوئي، طرق العناية به، وتكبير العينات.</p>
+            <p>أسئلة متخصصة في أجزاء المجهر الضوئي، طرق العناية به، وتكبير العينات.</p>
             <a href="microscope.html" class="btn-active">ابدأ الاختبار الآن</a>
         </div>
 
         <div class="quiz-card card-distiller">
             <h2>Water distiller</h2>
-            <p>اختبار شامل 
-                 لتقييم معلوماتك حول جهاز التقطير، جودة المياه المختبرية، والصيانة.</p>
+            <p>اختبار شامل لتقييم معلوماتك حول جهاز التقطير، جودة المياه المختبرية، والصيانة.</p>
             <a href="water.html" class="btn-active">ابدأ الاختبار الآن</a>
         </div>
 
         <div class="quiz-card card-oven">
             <h2>Oven</h2>
-            <p> اختبار مخصص لأساسيات استخدام الفرن الحراري في التعقيم والتجفيف المختبري.</p>
+            <p>اختبار مخصص لأساسيات استخدام الفرن الحراري في التعقيم والتجفيف المختبري.</p>
             <a href="oven.html" class="btn-active">ابدأ الاختبار الآن</a>
         </div>
-
+ 
+        <div class="quiz-card card-combined">
+            <h2 style="color: #f1c40f;">الاختبار الشامل</h2>
+            <p>قم بإنشاء اختبار مخصص يدمج أسئلة من أجهزة مختلفة، مع ميزة المراجعة الذكية للأسئلة الخاطئة.</p>
+            <a href="master-quiz.html" class="btn-active" style="background-color: #f1c40f; color: #121212;">إنشاء اختبار مشترك</a>
+        </div>
     </div>
 </body>
 </html>
