@@ -6,7 +6,7 @@
     <title>اختبار جهاز الطرد المركزي - (ترتيب عشوائي)</title>
     <style>
         :root { 
-            --primary: #e67e22; /* لون برتقالي مميز للطرد المركزي */
+            --primary: #e67e22; 
             --bg: #121212; 
             --container-bg: #1e1e1e; 
             --text-main: #e0e0e0; 
@@ -30,20 +30,7 @@
         
         .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
         
-        .custom-input {
-            background: var(--btn-bg);
-            border: 2px solid var(--border-color);
-            color: var(--text-main);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.3rem;
-            text-align: center;
-            outline: none;
-            transition: 0.3s;
-            width: 100%;
-            box-sizing: border-box;
-            font-weight: bold;
-        }
+        .custom-input { background: var(--btn-bg); border: 2px solid var(--border-color); color: var(--text-main); padding: 15px; border-radius: 10px; font-size: 1.3rem; text-align: center; outline: none; transition: 0.3s; width: 100%; box-sizing: border-box; font-weight: bold; }
         .custom-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(230, 126, 34, 0.2); }
 
         .btn-setup { background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
@@ -130,110 +117,11 @@
     </div>
 </div>
 
+<script src="questions.js"></script>
+
 <script>
-// بنك أسئلة جهاز الطرد المركزي (100 سؤال)
-const allQuestions = [
-    {q: "A centrifuge uses centrifugal force primarily for:", a: ["Heating samples", "Separating solids suspended in a liquid by sedimentation", "Creating magnetic fields", "Measuring pH"], c: 1},
-    {q: "In the text, centrifugal force is defined as the force generated when an object:", a: ["Moves in a straight line", "Rotates around a single point", "Vibrates randomly", "Floats on a liquid"], c: 1},
-    {q: "Rotational movements in a centrifuge allow forces much greater than:", a: ["Atmospheric pressure", "Gravity", "Surface tension", "Osmotic pressure"], c: 1},
-    {q: "Centrifuges are generally used in laboratories for:", a: ["Producing antibodies", "Separation of solid components from biological liquids through sedimentation", "Sterilizing glassware", "Measuring blood glucose"], c: 1},
-    {q: "Sedimentation of suspended and some dissolved particles occurs due to:", a: ["Heat", "Centrifugal force", "Magnetism", "Light"], c: 1},
-    {q: "One operation principle is that a centrifuge separates particles from samples such as:", a: ["Saliva and sweat", "Blood or urine", "Hair and nails", "Bone and cartilage"], c: 1},
-    {q: "Separating particles from blood or urine gives:", a: ["Whole blood", "Cell-free plasma or serum", "Pure water", "Solid fat only"], c: 1},
-    {q: "A centrifuge can separate two kinds of liquids with different:", a: ["Colors", "Densities", "Temperatures", "Odors"], c: 1},
-    {q: "An example given is separating lipid components from:", a: ["Red blood cells only", "Other components of plasma or serum", "Urine crystals", "Air bubbles"], c: 1},
-    {q: "The motor in a centrifuge is described as:", a: ["A part that stores samples", "An electric motor that helps to drive", "A part that locks the lid only", "A part that measures density"], c: 1},
-    {q: "The control panel is placed on the:", a: ["Rotor hub", "Front casing", "Bottom of the chamber", "Drive shaft"], c: 1},
-    {q: "The control panel serves the purpose of:", a: ["Cooling the rotor", "Controlling centrifuge operation", "Filtering dissolved particles", "Measuring friction"], c: 1},
-    {q: "The entire system is housed within a:", a: ["Latch", "Chamber", "Screen", "Tube cap"], c: 1},
-    {q: "Rotors in centrifuges are devices that house:", a: ["The control panel", "The tubes with the samples", "The chamber walls", "The latch springs"], c: 1},
-    {q: "Centrifuge rotors are designed to generate rotation speed that can bring about:", a: ["Heating of samples", "Separation of components in a sample", "Chemical reactions", "Electrical conduction"], c: 1},
-    {q: "\"Sample\" refers to:", a: ["The part that drives the rotor", "That to be separated", "The display screen", "The chamber lining"], c: 1},
-    {q: "The latch keeps the centrifuge lid closed in the event of:", a: ["Low speed", "Tube breakage or other problems while operating", "High room temperature", "Low density liquids"], c: 1},
-    {q: "A centrifuge includes a:", a: ["Rotor", "Microscope lens", "X-ray tube", "Ultrasound probe"], c: 0},
-    {q: "One listed part of a centrifuge is the:", a: ["Condenser", "Lid", "Beaker stand", "Pipette tip"], c: 1},
-    {q: "Another listed part is the:", a: ["Screen", "Burner", "Thermostat", "Dialysis membrane"], c: 0},
-    {q: "A listed part also includes the:", a: ["Drive shaft", "Incubator", "Spectrophotometer", "Autoclave chamber"], c: 0},
-    {q: "One safety precaution is to ensure:", a: ["A soft, uneven surface", "A sturdy, level work surface", "The lid is open during operation", "Tubes are loosely placed"], c: 1},
-    {q: "Balancing the centrifuge is important because an unbalanced centrifuge may:", a: ["Improve separation", "Cause significant damage and injure the operator", "Reduce density differences", "Prevent pelleting completely"], c: 1},
-    {q: "To balance the centrifuge, all sample tubes should be:", a: ["Randomly filled", "Evenly filled", "Left empty", "Filled with air"], c: 1},
-    {q: "If extra tubes are needed for balancing, fill them with:", a: ["Oil only", "Water or a liquid of similar density to the sample", "Alcohol only", "Mercury"], c: 1},
-    {q: "During operation, you should:", a: ["Open the lid to check progress", "Not open the lid while the rotor is moving", "Shake the centrifuge gently", "Remove tubes mid-run"], c: 1},
-    {q: "Many centrifuges have a \"safety shutoff,\" which:", a: ["Instantly stops the rotor motion", "Only stops power to the rotor", "Removes friction", "Opens the lid automatically"], c: 1},
-    {q: "Even after power is cut, the rotor will still spin due to its:", a: ["Density", "Inertia", "Temperature", "Color"], c: 1},
-    {q: "The rotor slows to a stop mainly by:", a: ["Magnetism", "Friction", "Diffusion", "Flotation"], c: 1},
-    {q: "If the centrifuge is shaking, the text says to:", a: ["Increase speed", "Pull the plug", "Open the lid", "Add more liquid"], c: 1},
-    {q: "The text says a little vibration is:", a: ["Always dangerous", "Normal", "Proof of tube breakage", "A reason to remove the rotor"], c: 1},
-    {q: "Excessive shaking can mean:", a: ["Higher accuracy", "Danger", "Better density gradients", "Faster pelleting without risk"], c: 1},
-    {q: "If shaking occurs, first double check that:", a: ["The lid is unlocked", "The tubes are correctly balanced", "The chamber is wet", "The rotor is removed"], c: 1},
-    {q: "If balancing does not resolve shaking, do not operate the centrifuge until:", a: ["The room temperature increases", "It has been serviced by the manufacturer or dealer", "You add more water to samples", "You change the screen"], c: 1},
-    {q: "Sedimentation force on a particle is opposed by:", a: ["Heat, light, magnetism", "Flotation force, frictional resistance, diffusion", "Pressure, volume, temperature", "Voltage, current, resistance"], c: 1},
-    {q: "One listed opposing factor is:", a: ["Radiation", "Flotation force", "Evaporation", "Oxidation"], c: 1},
-    {q: "Another opposing factor is:", a: ["Frictional resistance", "Color intensity", "Electrical conductivity", "Boiling"], c: 0},
-    {q: "Another opposing factor is:", a: ["Condensation", "Diffusion", "Reflection", "Refraction"], c: 1},
-    {q: "A fixed angle rotor is described as one where sedimenting particles travel:", a: ["A very long distance", "A short distance before pelleting", "No distance at all", "Only across tube diameter"], c: 1},
-    {q: "Fixed angle rotors typically have:", a: ["Longer run time", "Shorter run time", "No pelleting", "No samples"], c: 1},
-    {q: "The text states the most widely used rotor type is:", a: ["Swinging buckets", "Vertical tube", "Fixed angle", "Almost vertical tube"], c: 2},
-    {q: "Swinging bucket rotors are characterized by:", a: ["Short travel distance for particles", "Longer distance of travel", "Tubes parallel to the axis at all times", "Bands forming across diameter only"], c: 1},
-    {q: "A longer travel distance in swinging buckets may allow better separation in:", a: ["Heat gradient mixing", "Density gradient centrifugation", "Magnetic separation", "Filtration"], c: 1},
-    {q: "Swinging bucket rotors make it easier to withdraw:", a: ["Pellet without disturbing supernatant", "Supernatant without disturbing pellet", "Rotor without stopping", "Lid without latch"], c: 1},
-    {q: "Vertical tube rotors keep tubes:", a: ["Horizontal to the floor", "Parallel to the rotational axis", "At fixed angles to the axis", "Randomly aligned"], c: 1},
-    {q: "In vertical tube rotors, bands form across the tube's:", a: ["Length, not diameter", "Diameter, not length", "Lid surface only", "Bottom only"], c: 1},
-    {q: "Almost vertical tube rotors are used for gradient centrifugation when:", a: ["All components participate fully", "Some sample components do not participate in the gradient", "Only solids are present", "Only lipids are present"], c: 1},
-    {q: "Which option correctly pairs \"fixed angle\" with its key feature?", a: ["Long travel distance for better gradients", "Short travel distance before pelleting", "Bands across diameter, not length", "Best for when components do not participate in gradients"], c: 1},
-    {q: "Which option correctly pairs \"swinging buckets\" with a key advantage?", a: ["Shorter run time always", "Easier to withdraw supernatant without disturbing pellet", "Tubes remain parallel to axis", "Bands form across diameter only"], c: 1},
-    {q: "Which rotor type is described as \"keeps tubes parallel to the rotational axis\"?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Almost vertical tube"], c: 2},
-    {q: "Which rotor type forms bands across diameter rather than length?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Almost vertical tube"], c: 2},
-    {q: "The latch is important because it keeps the lid closed in case of:", a: ["High density gradients", "Tube breakage or other problems during operation", "Low vibration", "Correct balancing"], c: 1},
-    {q: "Which part is directly described as helping to \"drive\"?", a: ["Chamber", "Motor", "Lid", "Screen"], c: 1},
-    {q: "Which part is described as being on the front casing?", a: ["Rotor", "Control panel", "Latch", "Drive shaft"], c: 1},
-    {q: "Which part houses the entire system?", a: ["Lid", "Chamber", "Screen", "Sample tube"], c: 1},
-    {q: "Which part houses the tubes with samples?", a: ["Screen", "Rotor", "Latch", "Control panel"], c: 1},
-    {q: "Which statement is consistent with the text's definition of centrifugation outcomes?", a: ["Only suspended particles sediment", "Suspended and some dissolved particles can sediment", "Only dissolved particles sediment", "No particles sediment"], c: 1},
-    {q: "The text mentions centrifuges are used in the lab for:", a: ["Conducting multiple tests and treatments", "Generating X-rays", "Producing vaccines", "Measuring ECG"], c: 0},
-    {q: "According to the text, balancing requires tubes to be:", a: ["Unevenly filled to create gradients", "Evenly filled", "Filled to different volumes", "Filled with oil only"], c: 1},
-    {q: "The safety shutoff stops:", a: ["Rotor motion instantly", "Power to the rotor only", "Friction instantly", "Diffusion instantly"], c: 1},
-    {q: "The rotor continues to spin after shutoff because of:", a: ["Flotation", "Inertia", "Diffusion", "Sedimentation"], c: 1},
-    {q: "The rotor slows until it stops due to:", a: ["Friction", "Flotation", "Diffusion", "Electricity"], c: 0},
-    {q: "When shaking occurs, the first troubleshooting step is to:", a: ["Increase speed", "Double check tube balance", "Open the lid", "Remove the chamber"], c: 1},
-    {q: "If shaking persists after balancing, the text instructs to:", a: ["Keep running", "Stop using until serviced by manufacturer/dealer", "Replace samples with water", "Remove the rotor while spinning"], c: 1},
-    {q: "Which of the following is NOT listed as opposing sedimentation force?", a: ["Flotation force", "Frictional resistance", "Diffusion", "Gravity"], c: 3},
-    {q: "Which list includes ONLY centrifuge parts named in the text?", a: ["Motor, control panel, chamber, rotor", "Spectrophotometer, incubator, rotor, chamber", "Autoclave, motor, microscope, latch", "Centrifuge, X-ray tube, screen, chamber"], c: 0},
-    {q: "Which option includes a part explicitly listed in the text?", a: ["Pipette", "Lid", "Refrigerator", "pH meter"], c: 1},
-    {q: "Which part is named as \"Drive shaft\"?", a: ["A safety precaution", "A centrifuge part", "A rotor type", "An opposing force"], c: 1},
-    {q: "Which rotor type is linked to \"shorter run time\"?", a: ["Swinging buckets", "Vertical tube", "Fixed angle", "Almost vertical tube"], c: 2},
-    {q: "Which rotor type is linked to \"longer distance of travel\"?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Almost vertical tube"], c: 1},
-    {q: "Which rotor type is linked to \"easier to withdraw supernatant\"?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Almost vertical tube"], c: 1},
-    {q: "Which rotor type is linked to \"bands across diameter\"?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Almost vertical tube"], c: 2},
-    {q: "Which rotor type is specifically mentioned for gradient centrifugation with partial participation?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Almost vertical tube"], c: 3},
-    {q: "The centrifuge separates solids suspended in liquid by:", a: ["Filtration", "Sedimentation", "Evaporation", "Crystallization"], c: 1},
-    {q: "The text indicates centrifuges can separate liquids of:", a: ["Equal density only", "Diverse density", "Unknown temperature only", "Identical composition only"], c: 1},
-    {q: "Which example of liquid separation is given?", a: ["Separating glucose from water", "Separating lipid components from other components of plasma/serum", "Separating salt from sugar", "Separating oxygen from nitrogen"], c: 1},
-    {q: "Cell-free plasma or serum is obtained for:", a: ["Painting slides", "Different tests", "Heating experiments", "Drying samples"], c: 1},
-    {q: "The text describes centrifugal force as produced by:", a: ["Free fall", "Rotation around a single point", "Electrical current", "Chemical reaction"], c: 1},
-    {q: "The safety list includes the instruction:", a: ["Always operate on a shaky surface", "Ensure a sturdy, level work surface", "Operate with lid open for cooling", "Balance is optional"], c: 1},
-    {q: "The \"screen\" is listed as:", a: ["A rotor type", "A part of a centrifuge", "An opposing force", "A sample type"], c: 1},
-    {q: "Which statement best matches the text's cause-effect chain for safety shutoff?", a: ["Shutoff stops rotor instantly, preventing any movement", "Shutoff stops power, but rotor continues spinning due to inertia until friction stops it", "Shutoff increases friction to stop immediately", "Shutoff opens lid automatically"], c: 1},
-    {q: "Which two concepts are explicitly linked in the text as reasons a rotor keeps spinning after shutoff?", a: ["Diffusion and flotation", "Inertia and friction", "Density and viscosity", "Temperature and pressure"], c: 1},
-    {q: "Which option includes ONLY items that the text lists as opposing sedimentation force?", a: ["Flotation force, frictional resistance, diffusion", "Gravity, flotation, temperature", "Pressure, friction, density", "Diffusion, inertia, voltage"], c: 0},
-    {q: "Which rotor type would the text associate with minimal particle travel before pelleting?", a: ["Swinging buckets", "Vertical tube", "Fixed angle", "Almost vertical tube"], c: 2},
-    {q: "Which rotor type would the text associate with improved density gradient separation due to longer travel distance?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Lid type"], c: 1},
-    {q: "Which rotor type is explicitly described as keeping tubes parallel to the rotational axis, leading to bands across diameter?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Almost vertical tube"], c: 2},
-    {q: "Which rotor type is recommended for gradient centrifugation when some sample components do not participate in the gradient?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Almost vertical tube"], c: 3},
-    {q: "If the centrifuge shakes excessively, which sequence aligns with the text?", a: ["Open lid → rebalance", "Pull plug → check balance → if unresolved, stop until serviced", "Increase speed → add water → continue", "Ignore vibration → finish run"], c: 1},
-    {q: "Which safety point in the text is most directly aimed at preventing mechanical damage and injury from imbalance?", a: ["Do not open lid while rotor is moving", "Balance the centrifuge / evenly fill tubes", "Ensure a sturdy surface", "Pull the plug if shaking"], c: 1},
-    {q: "Which safety point focuses on preventing access while motion continues?", a: ["Balance the centrifuge", "Ensure sturdy surface", "Do not open the lid while rotor is moving", "Fill balancing tubes with oil"], c: 2},
-    {q: "In the text, the rotor is best defined as:", a: ["A lid lock only", "A motor device that houses tubes and generates rotation speed for separation", "The chamber cover", "A display screen"], c: 1},
-    {q: "Which part is explicitly described as keeping the lid closed during tube breakage events?", a: ["Screen", "Latch", "Motor", "Chamber"], c: 1},
-    {q: "Which part is described as being \"placed on the front casing\"?", a: ["Rotor", "Control panel", "Chamber", "Sample"], c: 1},
-    {q: "Which best represents the two operation principles listed?", a: ["Heating + filtration", "Separating particles from blood/urine + separating liquids of different densities", "Cooling + sterilization", "Magnetic separation + evaporation"], c: 1},
-    {q: "The text's example of separating liquids of different densities specifically involves:", a: ["Separating salt from water", "Separating lipid components from other plasma/serum components", "Separating oxygen from carbon dioxide", "Separating sand from water by filtration"], c: 1},
-    {q: "Which statement is consistent with the text's scope of centrifuge use?", a: ["Used only for one test", "Used for multiple tests and treatments", "Used only for imaging", "Used only for sterilization"], c: 1},
-    {q: "Which component list contains ONLY items explicitly named as centrifuge parts?", a: ["Motor, control panel, chamber, rotor, sample, latch, lid, screen, drive shaft", "Motor, MRI coil, chamber, rotor", "Control panel, autoclave, screen, drive shaft", "Lid, thermometer, rotor, microscope"], c: 0},
-    {q: "Which of the following is NOT a rotor type listed?", a: ["Fixed angle", "Swinging buckets", "Vertical tube", "Spiral funnel"], c: 3},
-    {q: "Which rotor type is described as the \"most widely used rotor type\"?", a: ["Swinging buckets", "Vertical tube", "Fixed angle", "Almost vertical tube"], c: 2},
-    {q: "According to the text, the fundamental reason centrifugation can separate components is that rotation generates:", a: ["Heat greater than room temperature", "Forces much greater than gravity in controlled time periods", "Chemical bonds", "Optical contrast"], c: 1}
-];
+// سحب أسئلة الطرد المركزي
+const allQuestions = typeof centrifugeQuestions !== 'undefined' ? centrifugeQuestions : [];
 
 let questionQueue = []; 
 let currentQuestion = null;
@@ -305,7 +193,6 @@ function nextQuestion() {
     const optionsBox = document.getElementById("options");
     optionsBox.innerHTML = "";
     
-    // الترتيب العشوائي للخيارات 
     let shuffledOptions = currentQuestion.a.map((option, index) => {
         return { text: option, isCorrect: (index === currentQuestion.c) };
     });
@@ -317,7 +204,6 @@ function nextQuestion() {
         btn.innerText = opt.text;
         btn.classList.add("option-btn");
         btn.dataset.correct = opt.isCorrect; 
-        
         btn.onclick = () => checkAnswer(opt.isCorrect, btn);
         optionsBox.appendChild(btn);
     });
