@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار الفرن الحراري (Oven) - (ترتيب عشوائي)</title>
+    <title>اختبار الفرن الحراري (Oven) - ترتيب عشوائي</title>
     <style>
         :root { 
-            --primary: #e53935; /* لون أحمر ناري مميز للفرن */
+            --primary: #e74c3c; 
             --bg: #121212; 
             --container-bg: #1e1e1e; 
             --text-main: #e0e0e0; 
             --text-sec: #b3b3b3;
             --border-color: #333333;
             --btn-bg: #2a2a2a;
-            --wrong: #e74c3c; 
+            --wrong: #c0392b; 
             --right: #2ecc71; 
             --warning: #f39c12; 
         }
         
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .quiz-container { background: var(--container-bg); width: 100%; max-width: 700px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 30px; position: relative; overflow: hidden; border: 1px solid #2a2a2a; }
+        .quiz-container { background: var(--container-bg); width: 100%; max-width: 700px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 30px; position: relative; overflow: hidden; border: 1px solid #2a2a2a; border-top: 5px solid var(--primary); }
         
         .header { border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; text-align: center; }
         .header h1 { font-size: 1.6rem; color: var(--primary); margin: 0; }
@@ -30,24 +30,11 @@
         
         .setup-btns { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
         
-        .custom-input {
-            background: var(--btn-bg);
-            border: 2px solid var(--border-color);
-            color: var(--text-main);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.3rem;
-            text-align: center;
-            outline: none;
-            transition: 0.3s;
-            width: 100%;
-            box-sizing: border-box;
-            font-weight: bold;
-        }
-        .custom-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(229, 57, 53, 0.2); }
+        .custom-input { background: var(--btn-bg); border: 2px solid var(--border-color); color: var(--text-main); padding: 15px; border-radius: 10px; font-size: 1.3rem; text-align: center; outline: none; transition: 0.3s; width: 100%; box-sizing: border-box; font-weight: bold; }
+        .custom-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(231, 76, 60, 0.2); }
 
         .btn-setup { background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
-        .btn-setup:hover { background: #c62828; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(229, 57, 53, 0.4); }
+        .btn-setup:hover { background: #c0392b; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4); }
 
         .stats-board { display: none; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; text-align: center; }
         .stat-box { background: var(--btn-bg); padding: 10px 5px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border-color); }
@@ -60,7 +47,7 @@
         .question-text { font-size: 1.2rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.6; font-weight: 600; text-align: left; direction: ltr; }
         .options-container { display: grid; gap: 12px; }
         .option-btn { background: var(--btn-bg); border: 2px solid var(--border-color); color: var(--text-main); padding: 15px; border-radius: 10px; cursor: pointer; text-align: left; font-size: 1rem; transition: all 0.2s; direction: ltr; }
-        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #331a1a; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #2c1e1e; }
         .option-btn.correct { background-color: rgba(46, 204, 113, 0.2); border-color: var(--right); color: var(--right); }
         .option-btn.incorrect { background-color: rgba(231, 76, 60, 0.2); border-color: var(--wrong); color: var(--wrong); }
         
@@ -75,7 +62,7 @@
         .btn-home:hover { background: #444; color: #fff; }
         
         .result-screen { text-align: center; display: none; }
-        .score { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 20px 0; text-shadow: 0 0 10px rgba(229, 57, 53, 0.3); }
+        .score { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 20px 0; text-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
         #score-text { color: var(--text-sec); font-size: 1.1rem; }
         
         #game { display: none; }
@@ -89,7 +76,7 @@
 
 <div class="quiz-container" id="quiz-box">
     <div class="header">
-        <h1>Laboratory Oven Quiz</h1>
+        <h1>Oven Quiz</h1>
     </div>
 
     <div class="setup-screen" id="setup-screen">
@@ -97,7 +84,7 @@
         <p>الأسئلة المتاحة في بنك الأسئلة: <span id="max-q-count" style="color: var(--primary); font-weight: bold;">0</span> سؤال</p>
         
         <div class="setup-btns">
-            <input type="number" id="custom-count" class="custom-input" min="1" placeholder="مثال: 50" value="30">
+            <input type="number" id="custom-count" class="custom-input" min="1" placeholder="مثال: 50" value="20">
             <button class="btn-setup" onclick="startCustomQuiz()">🚀 ابدأ الاختبار</button>
             <p id="error-msg" style="color: var(--wrong); display: none; margin-top: 5px; font-weight: bold; font-size: 0.9rem;"></p>
         </div>
@@ -130,110 +117,11 @@
     </div>
 </div>
 
+<script src="questions.js"></script>
+
 <script>
-// بنك أسئلة الفرن الحراري (100 سؤال)
-const allQuestions = [
-    {q: "The oven is used in a laboratory mainly for:", a: ["Centrifuging samples", "Drying and sterilizing glass and metal containers/materials", "Measuring blood pressure", "Freezing reagents"], c: 1},
-    {q: "The ovens operate between room temperature and:", a: ["120°C", "200°C", "350°C", "500°C"], c: 2},
-    {q: "The oven is also known as a:", a: ["Water bath", "Hot air oven", "Incubator only", "Autoclave"], c: 1},
-    {q: "Heat is generated through sets of:", a: ["Fans", "Electrical resistors", "Thermometers", "Fuses"], c: 1},
-    {q: "Electrical resistors transfer thermal energy to the:", a: ["Lid", "Chamber", "Control panel", "Coat"], c: 1},
-    {q: "The resistors are located in the:", a: ["Upper part", "Lower part", "Door", "Shelves"], c: 1},
-    {q: "Heat is transferred and distributed by:", a: ["Filtration", "Natural or forced convection", "Sedimentation", "Diffusion"], c: 1},
-    {q: "Forced convection is associated with ovens that have:", a: ["Internal ventilators", "External thermometers only", "No chamber", "No resistors"], c: 0},
-    {q: "The oven consists of two parts:", a: ["Plastic and glass parts", "Mechanical part and electrical part", "Liquid and solid parts", "Heating and cooling parts"], c: 1},
-    {q: "The coat is made of aluminum or stainless steel because it resists:", a: ["Water evaporation", "Mechanical shocks and oxidation", "Magnetic fields", "Electrical leakage only"], c: 1},
-    {q: "The coat has a rectangle solid shape to be:", a: ["Harder to move", "Easily placed anywhere", "Used underwater", "Used only in corners"], c: 1},
-    {q: "The coat contains isolator material surfaces to prevent:", a: ["Dust entering", "Heat getting outside", "Air circulation", "Timer operation"], c: 1},
-    {q: "Fiber glass is mentioned as having:", a: ["One type only", "Two types", "Four types", "No types"], c: 1},
-    {q: "The two fiber glass types are:", a: ["White and black", "Brown and yellow", "Red and green", "Thick and thin"], c: 1},
-    {q: "Brown fiber glass is described as:", a: ["Expensive and safe", "Cheap but dangerous", "Rare and harmless", "Liquid and unstable"], c: 1},
-    {q: "Brown fiber glass is dangerous because it causes:", a: ["Skin burns", "Inflammation in the chest", "Eye blindness", "Hearing loss"], c: 1},
-    {q: "Yellow fiber glass is described as:", a: ["More dangerous than brown", "Serious but less dangerous than brown", "Completely safe", "Not available"], c: 1},
-    {q: "The text advises caution with yellow fiber glass due to:", a: ["Sensitivity; wear gloves", "High voltage", "Strong magnetism", "Water absorption"], c: 0},
-    {q: "One advantage of fiber glass is that it is a good:", a: ["Electrical conductor", "Heat insulator", "Acid neutralizer", "Light reflector"], c: 1},
-    {q: "Fiber glass is used because it prevents heat from:", a: ["Entering the oven", "Passing from inside to outside", "Passing from outside to inside", "Forming convection"], c: 1},
-    {q: "Fiber glass helps to:", a: ["Maintain the internal temperature", "Reduce electrical current", "Increase corrosion", "Remove moisture chemically"], c: 0},
-    {q: "Fiber glass is described as having:", a: ["Very good heat conduction", "Very bad conduction heat", "Perfect heat conduction", "Zero insulation"], c: 1},
-    {q: "The container material must have:", a: ["Very high heat conduction", "Very low heat conduction", "High flammability", "High porosity"], c: 1},
-    {q: "The container should be resistant to:", a: ["Mechanical shock", "Light reflection", "Sound vibration", "Gravity"], c: 0},
-    {q: "The container volume must be enough to contain a certain amount of:", a: ["Water", "Tools to be sterilized or cleaned", "Fuel", "Explosives"], c: 1},
-    {q: "The shelves (mesh) are made of:", a: ["Rubber", "Aluminum or steel", "Wood", "Glass"], c: 1},
-    {q: "The mesh contains holes to increase:", a: ["Electrical resistance", "Thermal conductivity", "Corrosion rate", "Viscosity"], c: 1},
-    {q: "The used supply is:", a: ["110V-60Hz", "220V-50Hz", "380V-60Hz", "12V-DC"], c: 1},
-    {q: "The power supply section mentions a step down transformer and:", a: ["Cooling fan", "Rectifying circuit (AC to DC convert)", "Lubrication unit", "Pressure valve"], c: 1},
-    {q: "AC-to-DC conversion is used to run the:", a: ["Shelves", "Control panel (parameters/numeric departments)", "Fiber glass", "Coat"], c: 1},
-    {q: "Heating is produced by current passing through a conductor having:", a: ["Low resistance", "High resistance to current flow", "No resistance", "No conductor"], c: 1},
-    {q: "The heater is placed in the:", a: ["Lid", "Base of the instrument", "Door", "Control panel"], c: 1},
-    {q: "A heater element characteristic listed is:", a: ["High resistance", "High flammability", "Water solubility", "Optical transparency"], c: 0},
-    {q: "Another heater element characteristic is:", a: ["Electrical insulation", "Acid production", "Magnetic attraction", "Sound absorption"], c: 0},
-    {q: "Another heater element characteristic is:", a: ["Thermal conductivity", "Electrical discharge", "Chemical reactivity", "Optical reflection"], c: 0},
-    {q: "A thermostat is described as:", a: ["A shelf support", "A heat sensor connected directly with the heater", "A fuse type", "A mesh component"], c: 1},
-    {q: "The thermostat separates the heater in certain degrees and is used to:", a: ["Increase corrosion", "Protect the device", "Reduce insulation", "Increase vibration"], c: 1},
-    {q: "Temperature indicator methods include:", a: ["Timer and fuse", "Thermometer and thermocouple", "Mesh and coat", "Rotor and latch"], c: 1},
-    {q: "A thermometer is used to measure:", a: ["Temperature of material", "Voltage of supply", "Time of sterilization", "Speed of ventilation"], c: 0},
-    {q: "A thermocouple identifies:", a: ["External temperature only", "Internal temperature", "Mesh hole size", "Fuse current rating"], c: 1},
-    {q: "Mechanical thermometer principle depends on:", a: ["Diffusion rate", "Expansion factor of materials like mercury", "Air pressure only", "Electrical resistance only"], c: 1},
-    {q: "Mercury is used more than alcohol because it has:", a: ["Lower cost only", "Wide thermal range (70-350)", "Lower density than alcohol", "No expansion"], c: 1},
-    {q: "The thermal range for mercury given in the text is:", a: ["0-100", "70-350", "20-120", "100-500"], c: 1},
-    {q: "Electrical thermometer principle depends on:", a: ["Gravity convection", "Electrical conductive property of the material", "Pelleting", "Oxidation rate"], c: 1},
-    {q: "Resistors are described as heating elements transforming:", a: ["Thermal energy into electrical energy", "Electrical energy into thermal energy", "Light energy into chemical energy", "Mechanical energy into sound"], c: 1},
-    {q: "The timer has two types:", a: ["Digital and analog", "Electrical and mechanical", "Chemical and physical", "Infrared and ultraviolet"], c: 1},
-    {q: "The timer range is:", a: ["1-10 min", "5-60 min", "60-120 min", "0-5 min"], c: 1},
-    {q: "The timer gives the required period of time for:", a: ["Cooling", "Sterilization", "Lubrication", "Painting the coat"], c: 1},
-    {q: "The fuse protects the circuit from:", a: ["Low current only", "High current, high loads, short circuits", "Dust only", "Heat loss only"], c: 1},
-    {q: "The control panel contains several elements; the most important is:", a: ["Thermocouple wire", "Indicator power lamp (usually green)", "Shelf mesh", "Fiber glass layer"], c: 1},
-    {q: "The indicator heater lamp is usually:", a: ["Green", "Red", "Yellow", "Blue"], c: 1},
-    {q: "The control panel includes a:", a: ["Switch on/off", "Rotor", "Drive shaft", "Chamber lock"], c: 0},
-    {q: "The control panel includes a:", a: ["Timer", "Brown fiber glass", "Container volume gauge", "Acid detector"], c: 0},
-    {q: "The control panel includes:", a: ["Selected temperature", "Sample holder", "Flotation force sensor", "Density bucket"], c: 0},
-    {q: "The text lists types of oven by operation as:", a: ["Wet and dry", "Natural convection and forced convection", "Mechanical and electrical", "Large and small"], c: 1},
-    {q: "Natural convection is also called:", a: ["Gravity convection", "Magnetic convection", "Electric convection", "Chemical convection"], c: 0},
-    {q: "Forced convection is listed as a type of oven operation:", a: ["Yes", "No", "Only for water bath", "Only for centrifuge"], c: 0},
-    {q: "One application of the oven is:", a: ["Density gradient separation", "Drying", "Sedimentation", "Sonication"], c: 1},
-    {q: "Another application is sterilizing:", a: ["Plastics only", "Glass and metal containers/materials used for tests", "Only liquids", "Only paper"], c: 1},
-    {q: "The notification says to avoid using:", a: ["Stainless steel containers", "Flammable or explosive materials in the oven", "Thermometers", "Fuses"], c: 1},
-    {q: "The notification also advises avoiding:", a: ["Natural convection", "Spills of acid solutions or corrosive vapors inside the oven", "Internal temperature measurement", "Gloves"], c: 1},
-    {q: "Acid spills/corrosive vapors should be avoided to prevent corrosion of:", a: ["Only the coat", "Surfaces and interior shelves", "Only the thermometer", "Only the fuse"], c: 1},
-    {q: "Personal protection elements recommended include:", a: ["Cotton gloves only", "Insulated gloves, safety glasses, and tongs", "Earplugs only", "Lab coat only"], c: 1},
-    {q: "Tongs are recommended for:", a: ["Increasing convection", "Placing/removing substances or materials inside the drying oven", "Measuring internal temperature", "Turning off the fuse"], c: 1},
-    {q: "The coat is made of aluminum or stainless steel partly because it resists:", a: ["Inertia", "Oxidation", "Diffusion", "Pelleting"], c: 1},
-    {q: "The coat's isolator material surfaces mainly prevent:", a: ["Electrical flow", "Heat leakage to the outside", "Timer drift", "Lamp color change"], c: 1},
-    {q: "Brown fiber glass requires caution mainly because it may cause:", a: ["Tooth decay", "Chest inflammation", "Liquid evaporation", "Short circuits"], c: 1},
-    {q: "Yellow fiber glass is available widely and is:", a: ["Harmless", "Serious but less dangerous than brown", "More dangerous than brown", "Only decorative"], c: 1},
-    {q: "Yellow fiber glass handling advice includes:", a: ["Wear gloves", "Do not use gloves", "Heat it first", "Soak it in acid"], c: 0},
-    {q: "Fiber glass is suitable for insulation because it has:", a: ["High heat conduction", "Very bad conduction heat", "High flammability", "High electrical conductivity"], c: 1},
-    {q: "The container should be stainless steel because it is:", a: ["Highly conductive to heat", "Very low conductive to heat and resistant to mechanical shock", "Explosive-proof", "Transparent"], c: 1},
-    {q: "The mesh holes are intended to increase:", a: ["Corrosion", "Thermal conductivity", "Electrical shorting", "Chest inflammation risk"], c: 1},
-    {q: "The power supply information mentions running the control panel for:", a: ["Pelleting settings", "Parameters, numeric or other departments (modern fashion)", "Rotor speed settings", "Lid lock pressure"], c: 1},
-    {q: "The heater produces heat by a conductor with high resistance; this describes:", a: ["Evaporation", "Electrical heating by current flow through a high-resistance conductor", "Filtration", "Sedimentation"], c: 1},
-    {q: "The thermostat is connected directly with the heater and can:", a: ["Increase oxidation", "Separate the heater at certain degrees", "Increase mesh holes", "Reduce resistor count"], c: 1},
-    {q: "The thermostat is used to:", a: ["Protect the device", "Increase drying time", "Increase acid spills", "Reduce convection"], c: 0},
-    {q: "The temperature indicator includes a thermometer and a:", a: ["Rotor", "Thermocouple", "Latch", "Fuse"], c: 1},
-    {q: "The thermometer measures:", a: ["Temperature of material", "Internal voltage", "Shelf corrosion", "Fuse load"], c: 0},
-    {q: "The thermocouple identifies:", a: ["Internal temperature", "External oxidation", "Timer range", "Coat shape"], c: 0},
-    {q: "The control panel includes indicator lamps and also:", a: ["Switch on/off, timer, selected temperature", "Rotor buckets, latch, lid", "Sample tubes, gradients, diffusion", "Water level and heater motor"], c: 0},
-    {q: "Heat distribution occurs by convection, and forced convection is specifically linked to:", a: ["Coats made of stainless steel", "Ovens with internal ventilators", "Brown fiber glass only", "Timers with mechanical type only"], c: 1},
-    {q: "Which statement best matches the role of the isolator material in the coat?", a: ["It increases oxidation", "It prevents heat from getting outside", "It increases thermal conduction outward", "It reduces the need for resistors"], c: 1},
-    {q: "Which option correctly identifies BOTH fiber glass types mentioned?", a: ["Blue and green", "Brown and yellow", "Red and white", "Steel and aluminum"], c: 1},
-    {q: "The text labels brown fiber glass as \"cheap\" but dangerous mainly due to:", a: ["Electrical shock risk", "Chest inflammation risk", "Short circuit risk", "Explosion risk"], c: 1},
-    {q: "Yellow fiber glass is described as \"serious\" but less dangerous than brown, and requires:", a: ["No precautions", "Wearing gloves because of sensitivity", "Heating to 350°C before touching", "Wearing metal tongs only"], c: 1},
-    {q: "The phrase \"very bad conduction heat\" indicates fiber glass is good for:", a: ["Heat generation", "Heat insulation", "Electrical conduction", "Increasing thermal loss"], c: 1},
-    {q: "The container material requirement combines low heat conduction with:", a: ["High magnetic permeability", "Resistance to mechanical shock", "High flammability", "High corrosion creation"], c: 1},
-    {q: "The shelves (mesh) material and design choice (holes) is intended to:", a: ["Lower thermal conductivity", "Increase thermal conductivity", "Stop convection", "Prevent internal temperature measurement"], c: 1},
-    {q: "The power supply section mentions step down transformer + rectifying circuit to:", a: ["Run the control panel in modern fashion", "Increase mechanical shocks resistance", "Create chest inflammation", "Decrease internal temperature automatically"], c: 0},
-    {q: "The heater is described as being placed only in the:", a: ["Door", "Base of the instrument", "Control panel", "Upper coat"], c: 1},
-    {q: "Which list contains ONLY heater element characteristics exactly as stated?", a: ["High resistance; electrical insulation; thermal conductivity", "Low resistance; chemical insulation; thermal invisibility", "High voltage; low heat; high pressure", "High density; diffusion; inertia"], c: 0},
-    {q: "The thermostat is a heat sensor connected directly to the heater and can:", a: ["Separate the heater in certain degrees", "Increase acid vapor production", "Replace the fuse", "Replace the container"], c: 0},
-    {q: "The two temperature indicator methods are thermometer and thermocouple; their roles are:", a: ["Both measure external temperature only", "Thermometer measures temperature of material; thermocouple identifies internal temperature", "Thermometer identifies internal temperature; thermocouple measures shelf temperature", "Both identify humidity only"], c: 1},
-    {q: "Mechanical thermometer principle depends on:", a: ["Electrical conductivity", "Expansion factor of materials like mercury", "Forced convection", "Mesh holes"], c: 1},
-    {q: "Mercury is used more than alcohol because:", a: ["It is lighter", "It has a wide thermal range (70-350)", "It conducts electricity better", "It prevents corrosion"], c: 1},
-    {q: "Electrical thermometer principle depends on:", a: ["Expansion of liquid", "Electrical conductive property of material", "Oxidation of coat", "Friction in ventilators"], c: 1},
-    {q: "The timer types and range are stated as:", a: ["Electrical/mechanical; 5-60 min", "Digital/analog; 1-10 min", "Chemical/physical; 60-120 min", "Manual/automatic; 0-5 min"], c: 0},
-    {q: "Fuse function is stated as protection from:", a: ["Low current, low load, open circuit", "High current, high loads, short circuits", "Heat loss, convection, diffusion", "Oxidation, corrosion, insulation"], c: 1},
-    {q: "On the control panel, the power indicator lamp is usually:", a: ["Red", "Green", "Yellow", "Black"], c: 1},
-    {q: "Safety notification includes avoiding flammables/explosives and acids/corrosive vapors, and using PPE including:", a: ["Boots only", "Insulated gloves, safety glasses, and tongs", "Earplugs only", "Paper towels only"], c: 1}
-];
+// سحب أسئلة الأوفن
+const allQuestions = typeof ovenQuestions !== 'undefined' ? ovenQuestions : [];
 
 let questionQueue = []; 
 let currentQuestion = null;
@@ -245,6 +133,8 @@ let answeredCount = 0;
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("max-q-count").innerText = allQuestions.length;
     document.getElementById("custom-count").max = allQuestions.length;
+    // يعرض رقم مبدئي مقترح (إما 20 أو أقل حسب الموجود)
+    document.getElementById("custom-count").value = Math.min(20, allQuestions.length);
 });
 
 function startCustomQuiz() {
@@ -305,7 +195,6 @@ function nextQuestion() {
     const optionsBox = document.getElementById("options");
     optionsBox.innerHTML = "";
     
-    // الترتيب العشوائي للخيارات 
     let shuffledOptions = currentQuestion.a.map((option, index) => {
         return { text: option, isCorrect: (index === currentQuestion.c) };
     });
@@ -317,7 +206,6 @@ function nextQuestion() {
         btn.innerText = opt.text;
         btn.classList.add("option-btn");
         btn.dataset.correct = opt.isCorrect; 
-        
         btn.onclick = () => checkAnswer(opt.isCorrect, btn);
         optionsBox.appendChild(btn);
     });
