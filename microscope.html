@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار المجهر - Microscope Quiz</title>
+    <title>اختبار المجهر - (ترتيب عشوائي)</title>
     <style>
         :root { 
-            --primary: #9b59b6; /* لون بنفسجي مميز لاختبار المجهر */
+            --primary: #9b59b6; 
             --bg: #121212; 
             --container-bg: #1e1e1e; 
             --text-main: #e0e0e0; 
@@ -305,21 +305,17 @@ function nextQuestion() {
     const optionsBox = document.getElementById("options");
     optionsBox.innerHTML = "";
     
-    // --- ميزة خلط الخيارات العشوائي (Shuffling) ---
-    // نقوم بربط كل خيار بمعلومة (هل هو صحيح أم لا) قبل الخلط
+    // ميزة الترتيب العشوائي للخيارات
     let shuffledOptions = currentQuestion.a.map((option, index) => {
         return { text: option, isCorrect: (index === currentQuestion.c) };
     });
     
-    // خلط أماكن الخيارات عشوائياً
     shuffledOptions.sort(() => Math.random() - 0.5); 
-    // ----------------------------------------------
 
     shuffledOptions.forEach((opt) => {
         const btn = document.createElement("button");
         btn.innerText = opt.text;
         btn.classList.add("option-btn");
-        // نحفظ داخل الزر معلومة مخفية إذا كان هو الصح أم الخطأ
         btn.dataset.correct = opt.isCorrect; 
         
         btn.onclick = () => checkAnswer(opt.isCorrect, btn);
@@ -335,14 +331,11 @@ function checkAnswer(isCorrect, btn) {
     allBtns.forEach(b => b.disabled = true);
     
     if (isCorrect) {
-        // إذا كانت الإجابة صحيحة
         btn.classList.add("correct");
         score++;
     } else {
-        // إذا كانت خاطئة
         btn.classList.add("incorrect");
         wrongCount++;
-        // يبحث النظام عن الزر الصحيح (الذي تم تغيير مكانه) ويلونه بالأخضر
         allBtns.forEach(b => {
             if (b.dataset.correct === "true") {
                 b.classList.add("correct");
